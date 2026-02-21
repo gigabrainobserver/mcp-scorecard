@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp-scorecard"
+version = "0.1.0"
+description = "Trust scoring index for MCP servers"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [
+    { name = "gigabrainobserver" },
+]
+keywords = ["mcp", "trust", "security", "scorecard", "model-context-protocol"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/gigabrainobserver/mcp-scorecard"
+Repository = "https://github.com/gigabrainobserver/mcp-scorecard"
+
+[project.scripts]
+mcp-scorecard = "mcp_scorecard.__main__:main"
