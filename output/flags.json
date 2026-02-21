@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generated_at": "2026-02-21T22:26:19.294426Z",
+  "generated_at": "2026-02-21T22:49:33.106359Z",
   "flags": [
     {
       "flag": "DEAD_ENTRY",
@@ -455,6 +455,26 @@
       ]
     },
     {
+      "flag": "REPO_ARCHIVED",
+      "count": 14,
+      "servers": [
+        "ai.smithery/MisterSandFR-supabase-mcp-selfhosted",
+        "io.github.AungMyoKyaw/betterprompt-mcp",
+        "io.github.ExpertVagabond/guardrails",
+        "io.github.ExpertVagabond/ibmcloud",
+        "io.github.ExpertVagabond/ibmz",
+        "io.github.ExpertVagabond/mega",
+        "io.github.ExpertVagabond/oracle-cloud",
+        "io.github.ExpertVagabond/volcengine",
+        "io.github.antnewman/pm-analyse",
+        "io.github.antnewman/pm-data",
+        "io.github.antnewman/pm-validate",
+        "io.github.isamu/mulmocast-vision",
+        "io.github.koki-develop/esa-mcp-server",
+        "io.github.linggen/linggen"
+      ]
+    },
+    {
       "flag": "SENSITIVE_CRED_REQUEST",
       "count": 44,
       "servers": [
@@ -522,7 +542,7 @@
     },
     {
       "flag": "TEMPLATE_DESCRIPTION",
-      "count": 464,
+      "count": 465,
       "servers": [
         "ai.com.mcp/lenny-rachitsky-podcast",
         "ai.klavis/strata",
@@ -869,6 +889,7 @@
         "io.github.mhajder/librenms-mcp",
         "io.github.mhajder/zabbix-mcp",
         "io.github.mimersql/mimer-mcp",
+        "io.github.mkerchenski/reddit-ads-mcp",
         "io.github.mobile-next/mobile-mcp",
         "io.github.mpzarde/fabric-mcp",
         "io.github.n0zer0d4y/vulcan-file-ops",
