@@ -39,6 +39,7 @@ Binary flags independent of score:
 |------|------|
 | `DEAD_ENTRY` | No packages and no remotes |
 | `TEMPLATE_DESCRIPTION` | Matches known boilerplate |
+| `STAGING_ARTIFACT` | Test/staging name pattern + template description |
 | `HIGH_SECRET_DEMAND` | 5+ secret env vars |
 | `SENSITIVE_CRED_REQUEST` | Requests wallet keys, DB passwords, etc. |
 | `REPO_ARCHIVED` | GitHub repo archived |
@@ -73,7 +74,9 @@ The pipeline produces three JSON files:
 ## Usage
 
 ```bash
-pip install mcp-scorecard
+git clone https://github.com/gigabrainobserver/mcp-scorecard.git
+cd mcp-scorecard
+pip install -e .
 ```
 
 Run a full scan:
@@ -92,8 +95,8 @@ Output goes to `./output/` by default. Use `-o` to specify a different directory
 ```
 COLLECT (2min)     ENRICH (65min)      SCORE (10sec)     PUBLISH
 MCP Registry  -->  GitHub API     -->  Calculator   -->  index.json
-  ~2,300 servers   ~5,100 API calls    4 categories      stats.json
-                   (5000/hr limit)     12 red flags      flags.json
+  ~2,300 servers   ~5,600 API calls    4 categories      stats.json
+                   (5000/hr limit)     8 red flags       flags.json
 ```
 
 Runs daily via GitHub Actions. ~70 min total runtime. All free APIs.
