@@ -3,268 +3,267 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MCP Scorecard — Trust Scoring for MCP Servers</title>
+<title>MCP Scorecard</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.6; }
-  a { color: #58a6ff; text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #e6edf3; }
 
-  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  /* Header */
+  .header { padding: 24px 32px; border-bottom: 1px solid #21262d; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .header h1 { font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .header h1 a { color: #e6edf3; text-decoration: none; }
+  .header h1 a:hover { color: #58a6ff; }
+  .header .nav { display: flex; gap: 16px; font-size: 13px; }
+  .header .nav a { color: #7d8590; text-decoration: none; }
+  .header .nav a:hover { color: #58a6ff; }
+  .header .meta { font-size: 13px; color: #7d8590; display: flex; gap: 16px; margin-left: auto; }
 
-  /* Hero */
-  .hero { padding: 80px 0 48px; text-align: center; }
-  .hero h1 { font-size: 40px; font-weight: 700; margin-bottom: 12px; }
-  .hero h1 span { color: #58a6ff; }
-  .hero .tagline { font-size: 18px; color: #7d8590; max-width: 560px; margin: 0 auto 32px; }
-  .hero .cta { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-  .btn { padding: 10px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block; }
-  .btn-primary { background: #58a6ff; color: #0d1117; }
-  .btn-primary:hover { background: #79b8ff; text-decoration: none; }
-  .btn-secondary { background: #21262d; color: #e6edf3; border: 1px solid #30363d; }
-  .btn-secondary:hover { background: #30363d; text-decoration: none; }
-
-  /* Stats banner */
-  .stats-banner { border-top: 1px solid #21262d; border-bottom: 1px solid #21262d; padding: 24px 0; margin-bottom: 48px; }
-  .stats-row { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+  /* Stats bar */
+  .stats-bar { padding: 16px 32px; border-bottom: 1px solid #21262d; display: flex; gap: 24px; flex-wrap: wrap; }
   .stat { text-align: center; }
-  .stat .num { font-size: 28px; font-weight: 700; color: #58a6ff; }
-  .stat .label { font-size: 12px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat .num { font-size: 22px; font-weight: 700; }
+  .stat .label { font-size: 11px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; }
+  .band-high .num { color: #3fb950; }
+  .band-mod .num { color: #58a6ff; }
+  .band-low .num { color: #d29922; }
+  .band-vlow .num { color: #f85149; }
+  .band-unk .num { color: #6e7681; }
 
-  /* Sections */
-  section { margin-bottom: 56px; }
-  section h2 { font-size: 24px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #21262d; }
-  section h3 { font-size: 16px; font-weight: 600; margin: 20px 0 8px; }
-  section p { color: #b1bac4; margin-bottom: 12px; }
+  /* Controls */
+  .controls { padding: 12px 32px; border-bottom: 1px solid #21262d; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search { background: #161b22; border: 1px solid #30363d; color: #e6edf3; padding: 6px 12px; border-radius: 6px; font-size: 14px; width: 280px; }
+  .search:focus { outline: none; border-color: #58a6ff; }
+  .filter-btn { background: #21262d; border: 1px solid #30363d; color: #7d8590; padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; }
+  .filter-btn:hover, .filter-btn.active { background: #30363d; color: #e6edf3; border-color: #58a6ff; }
+  .sort-select { background: #161b22; border: 1px solid #30363d; color: #e6edf3; padding: 6px 8px; border-radius: 6px; font-size: 12px; }
+  .count-label { font-size: 13px; color: #7d8590; margin-left: auto; }
 
-  /* Category grid */
-  .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; }
-  .cat-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; }
-  .cat-card .weight { font-size: 12px; color: #7d8590; margin-bottom: 4px; }
-  .cat-card .cat-name { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-  .cat-card .cat-q { font-size: 13px; color: #7d8590; font-style: italic; }
-  .cat-prov .cat-name { color: #3fb950; }
-  .cat-maint .cat-name { color: #58a6ff; }
-  .cat-pop .cat-name { color: #d29922; }
-  .cat-perm .cat-name { color: #f0883e; }
+  /* Grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: #21262d; padding: 1px; }
 
-  /* Bands */
-  .bands { display: flex; gap: 2px; margin: 16px 0; border-radius: 6px; overflow: hidden; }
-  .band { padding: 10px; text-align: center; flex: 1; }
-  .band .range { font-size: 14px; font-weight: 700; }
-  .band .blabel { font-size: 11px; }
-  .band-high { background: rgba(63,185,80,0.15); color: #3fb950; }
-  .band-mod { background: rgba(88,166,255,0.15); color: #58a6ff; }
-  .band-low { background: rgba(210,153,34,0.15); color: #d29922; }
-  .band-vlow { background: rgba(248,81,73,0.15); color: #f85149; }
-  .band-unk { background: rgba(110,118,129,0.15); color: #6e7681; }
+  /* Card */
+  .card { background: #161b22; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .card:hover { background: #1c2128; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-name { font-size: 13px; font-weight: 600; color: #e6edf3; word-break: break-all; line-height: 1.3; }
+  .card-name .ns { color: #7d8590; font-weight: 400; }
 
-  /* Flags table */
-  .flags-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-  .flags-table th, .flags-table td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #21262d; }
-  .flags-table th { font-size: 12px; color: #7d8590; text-transform: uppercase; font-weight: 600; }
-  .flags-table td { font-size: 14px; }
-  .flags-table .flag-name { font-weight: 600; color: #f85149; font-family: monospace; font-size: 13px; }
-  .flags-table .flag-count { color: #7d8590; font-size: 13px; }
+  /* Score circle */
+  .score-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .score-high { background: rgba(63,185,80,0.15); color: #3fb950; border: 2px solid #3fb950; }
+  .score-mod { background: rgba(88,166,255,0.15); color: #58a6ff; border: 2px solid #58a6ff; }
+  .score-low { background: rgba(210,153,34,0.15); color: #d29922; border: 2px solid #d29922; }
+  .score-vlow { background: rgba(248,81,73,0.15); color: #f85149; border: 2px solid #f85149; }
+  .score-unk { background: rgba(110,118,129,0.15); color: #6e7681; border: 2px solid #6e7681; }
 
-  /* Principles */
-  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 16px 0; }
-  .principle { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; }
-  .principle h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-  .principle p { font-size: 13px; color: #7d8590; margin: 0; }
+  /* Category bars */
+  .cat-bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+  .cat-bar { display: flex; flex-direction: column; gap: 2px; }
+  .cat-bar .bar-label { font-size: 9px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.3px; }
+  .cat-bar .bar-track { height: 4px; background: #21262d; border-radius: 2px; overflow: hidden; }
+  .cat-bar .bar-fill { height: 100%; border-radius: 2px; }
 
-  /* API */
-  .endpoint { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; margin: 12px 0; font-family: monospace; }
-  .endpoint .method { color: #3fb950; font-weight: 700; }
-  .endpoint .url { color: #e6edf3; font-size: 14px; word-break: break-all; }
-  .endpoint .desc { color: #7d8590; font-size: 13px; margin-top: 4px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+  /* Signals */
+  .signals { display: flex; flex-wrap: wrap; gap: 4px; }
+  .signal { font-size: 10px; padding: 1px 6px; border-radius: 3px; }
+  .signal-yes { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .signal-no { background: rgba(110,118,129,0.1); color: #484f58; }
 
-  /* Footer */
-  footer { border-top: 1px solid #21262d; padding: 24px 0; text-align: center; color: #484f58; font-size: 13px; margin-top: 40px; }
-  footer a { color: #7d8590; }
+  /* Flags */
+  .flags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .flag { font-size: 10px; padding: 2px 6px; border-radius: 3px; background: rgba(248,81,73,0.15); color: #f85149; font-weight: 600; }
+
+  /* Permissions detail */
+  .perm-detail { font-size: 11px; color: #7d8590; }
+  .perm-detail span { margin-right: 8px; }
 </style>
 </head>
 <body>
 
-<div class="container">
-
-  <div class="hero">
-    <h1>MCP <span>Scorecard</span></h1>
-    <p class="tagline">Independent trust scoring for MCP servers. Transparent methodology, no opinions — just data from the MCP registry and GitHub.</p>
-    <div class="cta">
-      <a href="viewer.html" class="btn btn-primary">Browse All Servers</a>
-      <a href="https://github.com/gigabrainobserver/mcp-scorecard" class="btn btn-secondary">View Source</a>
-    </div>
+<div class="header">
+  <h1><a href="./">MCP Scorecard</a></h1>
+  <div class="nav">
+    <a href="about.html">About</a>
+    <a href="https://github.com/gigabrainobserver/mcp-scorecard">GitHub</a>
   </div>
-
-  <div class="stats-banner">
-    <div class="stats-row" id="stats-row">
-      <div class="stat"><div class="num" id="s-total">—</div><div class="label">Servers Scored</div></div>
-      <div class="stat"><div class="num" id="s-avg">—</div><div class="label">Avg Score</div></div>
-      <div class="stat"><div class="num" id="s-high">—</div><div class="label">High Trust</div></div>
-      <div class="stat"><div class="num" id="s-flagged">—</div><div class="label">Flagged</div></div>
-      <div class="stat"><div class="num" id="s-updated">—</div><div class="label">Last Updated</div></div>
-    </div>
+  <div class="meta">
+    <span id="generated"></span>
+    <span id="version"></span>
   </div>
-
-  <section>
-    <h2>Why This Exists</h2>
-    <p>The <a href="https://registry.modelcontextprotocol.io">MCP registry</a> has thousands of servers with zero trust signals. No download counts, no verification, no quality scoring. Agents are increasingly auto-selecting MCP servers and handing them credentials with no way to evaluate trustworthiness.</p>
-    <p>MCP Scorecard is a batch-processed trust scoring index that aggregates publicly available signals from the MCP registry and GitHub. It runs daily, scores every server, and publishes the results as static JSON that anyone — human or agent — can consume.</p>
-  </section>
-
-  <section>
-    <h2>Scoring Model</h2>
-    <p>Every server is scored 0–100 across four categories. The aggregate trust score is a weighted average.</p>
-
-    <div class="cat-grid">
-      <div class="cat-card cat-prov">
-        <div class="weight">30% weight</div>
-        <div class="cat-name">Provenance</div>
-        <div class="cat-q">Is this real?</div>
-      </div>
-      <div class="cat-card cat-maint">
-        <div class="weight">25% weight</div>
-        <div class="cat-name">Maintenance</div>
-        <div class="cat-q">Is it alive?</div>
-      </div>
-      <div class="cat-card cat-pop">
-        <div class="weight">20% weight</div>
-        <div class="cat-name">Popularity</div>
-        <div class="cat-q">Does anyone use it?</div>
-      </div>
-      <div class="cat-card cat-perm">
-        <div class="weight">25% weight</div>
-        <div class="cat-name">Permissions</div>
-        <div class="cat-q">What does it want?</div>
-      </div>
-    </div>
-
-    <h3>Provenance — Is this real?</h3>
-    <p>Has a source repo, license, installable package, website, icon, matching namespace, SECURITY.md, code of conduct, and a unique (non-boilerplate) description.</p>
-
-    <h3>Maintenance — Is it alive?</h3>
-    <p>Repo age, how recently it was pushed, active commit weeks in the past year, contributor count, and release activity.</p>
-
-    <h3>Popularity — Does anyone use it?</h3>
-    <p>GitHub stars, forks, and watchers on a logarithmic scale. npm/PyPI download counts planned for a future version.</p>
-
-    <h3>Permissions — What does it want?</h3>
-    <p>How many secrets it requests, transport type risk (local stdio vs remote), credential sensitivity (API key vs database password vs wallet key), and package type.</p>
-  </section>
-
-  <section>
-    <h2>Score Bands</h2>
-    <div class="bands">
-      <div class="band band-high"><div class="range">80–100</div><div class="blabel">High Trust</div></div>
-      <div class="band band-mod"><div class="range">60–79</div><div class="blabel">Moderate</div></div>
-      <div class="band band-low"><div class="range">40–59</div><div class="blabel">Low Trust</div></div>
-      <div class="band band-vlow"><div class="range">20–39</div><div class="blabel">Very Low</div></div>
-      <div class="band band-unk"><div class="range">0–19</div><div class="blabel">Suspicious</div></div>
-    </div>
-  </section>
-
-  <section>
-    <h2>Red Flags</h2>
-    <p>Binary flags that indicate structural or behavioral anomalies, independent of the numeric score. These are observable facts, not opinions.</p>
-    <table class="flags-table">
-      <thead><tr><th>Flag</th><th>What it observes</th><th>Count</th></tr></thead>
-      <tbody id="flags-tbody">
-        <tr><td class="flag-name">DEAD_ENTRY</td><td>No packages and no remotes — server can't be installed or reached</td><td class="flag-count" id="fc-DEAD_ENTRY">—</td></tr>
-        <tr><td class="flag-name">TEMPLATE_DESCRIPTION</td><td>Description matches common boilerplate ("A model context protocol server")</td><td class="flag-count" id="fc-TEMPLATE_DESCRIPTION">—</td></tr>
-        <tr><td class="flag-name">STAGING_ARTIFACT</td><td>Name contains test/staging patterns combined with a template description</td><td class="flag-count" id="fc-STAGING_ARTIFACT">—</td></tr>
-        <tr><td class="flag-name">HIGH_SECRET_DEMAND</td><td>Requests 5 or more secret environment variables</td><td class="flag-count" id="fc-HIGH_SECRET_DEMAND">—</td></tr>
-        <tr><td class="flag-name">SENSITIVE_CRED_REQUEST</td><td>Requests wallet keys, database passwords, or other high-risk credentials</td><td class="flag-count" id="fc-SENSITIVE_CRED_REQUEST">—</td></tr>
-        <tr><td class="flag-name">REPO_ARCHIVED</td><td>GitHub repository is archived by its maintainer</td><td class="flag-count" id="fc-REPO_ARCHIVED">—</td></tr>
-        <tr><td class="flag-name">NO_SOURCE</td><td>No repository URL and no verifiable package source</td><td class="flag-count" id="fc-NO_SOURCE">—</td></tr>
-        <tr><td class="flag-name">DESCRIPTION_DUPLICATE</td><td>Same description used by 3+ servers from different publishers</td><td class="flag-count" id="fc-DESCRIPTION_DUPLICATE">—</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Principles</h2>
-    <div class="principles">
-      <div class="principle">
-        <h4>Transparent</h4>
-        <p>Every signal, weight, and threshold is public. The full scoring logic is open source. Anyone can audit, reproduce, or fork it.</p>
-      </div>
-      <div class="principle">
-        <h4>Objective</h4>
-        <p>No curated blocklists, no manual overrides, no pay-to-play. Flags are observable facts from public data, not opinions.</p>
-      </div>
-      <div class="principle">
-        <h4>Independent</h4>
-        <p>Not a marketplace, not selling MCP servers, no commercial interest in rankings. The index exists to inform, not to sell.</p>
-      </div>
-      <div class="principle">
-        <h4>Machine-Readable</h4>
-        <p>Static JSON output designed for agent consumption. Any MCP client can check trust scores before granting credentials.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>Data Access</h2>
-    <p>All data is freely available as static JSON. No API key required. Updated daily.</p>
-    <div class="endpoint">
-      <span class="method">GET</span> <span class="url" id="url-index">output/index.json</span>
-      <div class="desc">Per-server scores, signals, and flags for every server in the registry</div>
-    </div>
-    <div class="endpoint">
-      <span class="method">GET</span> <span class="url" id="url-stats">output/stats.json</span>
-      <div class="desc">Ecosystem summary — score distribution, flag counts, top servers</div>
-    </div>
-    <div class="endpoint">
-      <span class="method">GET</span> <span class="url" id="url-flags">output/flags.json</span>
-      <div class="desc">Servers grouped by flag type for quick lookup</div>
-    </div>
-  </section>
-
-  <section>
-    <h2>How It Works</h2>
-    <p>The pipeline runs daily via GitHub Actions. Four stages, ~70 minutes, all free public APIs.</p>
-    <div class="endpoint" style="font-size:13px; line-height:1.8;">
-      <span style="color:#3fb950;">COLLECT</span> Registry API → 2,300+ servers<br>
-      <span style="color:#58a6ff;">ENRICH</span>&nbsp; GitHub API → repo metadata, community profile, commit activity<br>
-      <span style="color:#d29922;">SCORE</span>&nbsp;&nbsp; 4 categories × every server + red flag detection<br>
-      <span style="color:#f0883e;">PUBLISH</span> Static JSON → index.json, stats.json, flags.json
-    </div>
-  </section>
-
 </div>
 
-<footer>
-  <div class="container">
-    <a href="https://github.com/gigabrainobserver/mcp-scorecard">GitHub</a> &nbsp;·&nbsp;
-    <a href="viewer.html">Browse Servers</a> &nbsp;·&nbsp;
-    Built by <a href="https://github.com/gigabrainobserver">gigabrainobserver</a>
-  </div>
-</footer>
+<div class="stats-bar" id="stats-bar"></div>
+
+<div class="controls">
+  <input type="text" class="search" id="search" placeholder="Search servers...">
+  <select class="sort-select" id="sort">
+    <option value="score-desc">Score: High → Low</option>
+    <option value="score-asc">Score: Low → High</option>
+    <option value="name-asc">Name: A → Z</option>
+    <option value="flags-desc">Most Flags</option>
+  </select>
+  <div id="flag-filters" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+  <span class="count-label" id="count-label"></span>
+</div>
+
+<div class="grid" id="grid"></div>
 
 <script>
-async function loadStats() {
-  try {
-    const resp = await fetch('./output/stats.json');
-    const s = await resp.json();
-    document.getElementById('s-total').textContent = s.server_count.toLocaleString();
-    document.getElementById('s-avg').textContent = s.average_trust_score;
-    const high = s.score_distribution.find(d => d.label === 'High Trust');
-    document.getElementById('s-high').textContent = high ? high.count : 0;
-    const flagged = Object.values(s.flag_summary).reduce((a, b) => a + b, 0);
-    document.getElementById('s-flagged').textContent = Object.keys(s.flag_summary).length + ' types';
-    const d = new Date(s.generated_at);
-    document.getElementById('s-updated').textContent = d.toLocaleDateString();
+let allServers = [];
+let activeFlags = new Set();
 
-    for (const [flag, count] of Object.entries(s.flag_summary)) {
-      const el = document.getElementById('fc-' + flag);
-      if (el) el.textContent = count;
-    }
-  } catch (e) {
-    console.error('Failed to load stats:', e);
-  }
+function scoreClass(s) {
+  if (s >= 80) return 'high';
+  if (s >= 60) return 'mod';
+  if (s >= 40) return 'low';
+  if (s >= 20) return 'vlow';
+  return 'unk';
 }
-loadStats();
+
+function barColor(s) {
+  if (s >= 80) return '#3fb950';
+  if (s >= 60) return '#58a6ff';
+  if (s >= 40) return '#d29922';
+  if (s >= 20) return '#f85149';
+  return '#6e7681';
+}
+
+const SIGNAL_LABELS = {
+  has_source_repo: 'Repo',
+  has_license: 'License',
+  has_installable_package: 'Package',
+  has_website_url: 'Website',
+  has_icon: 'Icon',
+  has_security_md: 'SECURITY.md',
+  has_code_of_conduct: 'CoC',
+  namespace_matches_owner: 'NS Match',
+  repo_not_archived: 'Active Repo',
+  unique_description: 'Unique Desc',
+};
+
+function renderCard(name, s) {
+  const cls = scoreClass(s.trust_score);
+  const parts = name.split('/');
+  const ns = parts[0];
+  const id = parts.slice(1).join('/');
+
+  // Provenance signals
+  let sigs = '';
+  for (const [key, label] of Object.entries(SIGNAL_LABELS)) {
+    const val = s.signals[key];
+    sigs += `<span class="signal ${val ? 'signal-yes' : 'signal-no'}">${label}</span>`;
+  }
+
+  // Flags
+  let flagsHtml = '';
+  if (s.flags.length > 0) {
+    flagsHtml = '<div class="flags">' + s.flags.map(f => `<span class="flag">${f}</span>`).join('') + '</div>';
+  }
+
+  // Permissions detail
+  const secrets = s.signals.secret_env_var_count || 0;
+  const transport = s.signals.transport_type_risk || 0;
+  const cred = s.signals.credential_sensitivity || 0;
+  let permHtml = `<div class="perm-detail">`;
+  if (secrets > 0) permHtml += `<span>🔑 ${secrets} secret${secrets > 1 ? 's' : ''}</span>`;
+  permHtml += `<span>⬡ transport:${transport}</span>`;
+  permHtml += `<span>🛡 cred:${cred}</span>`;
+  permHtml += `</div>`;
+
+  return `<div class="card" data-name="${name}" data-score="${s.trust_score}" data-flags="${s.flags.join(',')}">
+    <div class="card-top">
+      <div class="card-name"><span class="ns">${ns}/</span>${id}</div>
+      <div class="score-circle score-${cls}">${s.trust_score}</div>
+    </div>
+    <div class="cat-bars">
+      ${['provenance','maintenance','popularity','permissions'].map(cat => {
+        const v = s.scores[cat];
+        return `<div class="cat-bar">
+          <span class="bar-label">${cat.slice(0,4)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${v}%;background:${barColor(v)}"></div></div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="signals">${sigs}</div>
+    ${permHtml}
+    ${flagsHtml}
+  </div>`;
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const sort = document.getElementById('sort').value;
+
+  let filtered = allServers.filter(([name, s]) => {
+    if (q && !name.toLowerCase().includes(q)) return false;
+    if (activeFlags.size > 0 && !s.flags.some(f => activeFlags.has(f))) return false;
+    return true;
+  });
+
+  // Sort
+  if (sort === 'score-desc') filtered.sort((a, b) => b[1].trust_score - a[1].trust_score);
+  else if (sort === 'score-asc') filtered.sort((a, b) => a[1].trust_score - b[1].trust_score);
+  else if (sort === 'name-asc') filtered.sort((a, b) => a[0].localeCompare(b[0]));
+  else if (sort === 'flags-desc') filtered.sort((a, b) => b[1].flags.length - a[1].flags.length || b[1].trust_score - a[1].trust_score);
+
+  document.getElementById('grid').innerHTML = filtered.map(([n, s]) => renderCard(n, s)).join('');
+  document.getElementById('count-label').textContent = `${filtered.length} of ${allServers.length} servers`;
+}
+
+async function init() {
+  const resp = await fetch('./output/index.json');
+  const data = await resp.json();
+
+  document.getElementById('generated').textContent = `Generated: ${new Date(data.generated_at).toLocaleDateString()}`;
+  document.getElementById('version').textContent = `v${data.version}`;
+
+  allServers = Object.entries(data.servers);
+
+  // Stats
+  const bands = { high: 0, mod: 0, low: 0, vlow: 0, unk: 0 };
+  const flagCounts = {};
+  let totalScore = 0;
+  for (const [, s] of allServers) {
+    bands[scoreClass(s.trust_score)]++;
+    totalScore += s.trust_score;
+    for (const f of s.flags) flagCounts[f] = (flagCounts[f] || 0) + 1;
+  }
+  const avg = Math.round(totalScore / allServers.length);
+  const flagged = allServers.filter(([,s]) => s.flags.length > 0).length;
+
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat"><div class="num">${allServers.length}</div><div class="label">Servers</div></div>
+    <div class="stat"><div class="num">${avg}</div><div class="label">Avg Score</div></div>
+    <div class="stat band-high"><div class="num">${bands.high}</div><div class="label">High Trust</div></div>
+    <div class="stat band-mod"><div class="num">${bands.mod}</div><div class="label">Moderate</div></div>
+    <div class="stat band-low"><div class="num">${bands.low}</div><div class="label">Low Trust</div></div>
+    <div class="stat band-vlow"><div class="num">${bands.vlow}</div><div class="label">Very Low</div></div>
+    <div class="stat band-unk"><div class="num">${bands.unk}</div><div class="label">Suspicious</div></div>
+    <div class="stat"><div class="num" style="color:#f85149">${flagged}</div><div class="label">Flagged</div></div>
+  `;
+
+  // Flag filter buttons
+  const sortedFlags = Object.entries(flagCounts).sort((a, b) => b[1] - a[1]);
+  document.getElementById('flag-filters').innerHTML = sortedFlags.map(([f, c]) =>
+    `<button class="filter-btn" data-flag="${f}">${f} (${c})</button>`
+  ).join('');
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const flag = btn.dataset.flag;
+      if (activeFlags.has(flag)) { activeFlags.delete(flag); btn.classList.remove('active'); }
+      else { activeFlags.add(flag); btn.classList.add('active'); }
+      render();
+    });
+  });
+
+  document.getElementById('search').addEventListener('input', render);
+  document.getElementById('sort').addEventListener('change', render);
+
+  render();
+}
+
+init();
 </script>
 </body>
 </html>
