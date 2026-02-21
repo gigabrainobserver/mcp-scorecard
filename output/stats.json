@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generated_at": "2026-02-21T21:51:59.715805Z",
+  "generated_at": "2026-02-21T21:56:43.595917Z",
   "server_count": 2294,
   "servers_with_repo": 1894,
   "servers_with_packages": 1504,
@@ -15,13 +15,13 @@
       "label": "Moderate Trust",
       "min_score": 60,
       "max_score": 79,
-      "count": 391
+      "count": 390
     },
     {
       "label": "Low Trust",
       "min_score": 40,
       "max_score": 59,
-      "count": 1151
+      "count": 1152
     },
     {
       "label": "Very Low Trust",
