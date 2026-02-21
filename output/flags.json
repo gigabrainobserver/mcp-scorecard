@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generated_at": "2026-02-21T21:56:43.595917Z",
+  "generated_at": "2026-02-21T22:26:19.294426Z",
   "flags": [
     {
       "flag": "DEAD_ENTRY",
@@ -452,26 +452,6 @@
         "tech.skybridge.productivity/Productivity",
         "technology.draup/api-server",
         "uno.platform/uno"
-      ]
-    },
-    {
-      "flag": "REPO_ARCHIVED",
-      "count": 14,
-      "servers": [
-        "ai.smithery/MisterSandFR-supabase-mcp-selfhosted",
-        "io.github.AungMyoKyaw/betterprompt-mcp",
-        "io.github.ExpertVagabond/guardrails",
-        "io.github.ExpertVagabond/ibmcloud",
-        "io.github.ExpertVagabond/ibmz",
-        "io.github.ExpertVagabond/mega",
-        "io.github.ExpertVagabond/oracle-cloud",
-        "io.github.ExpertVagabond/volcengine",
-        "io.github.antnewman/pm-analyse",
-        "io.github.antnewman/pm-data",
-        "io.github.antnewman/pm-validate",
-        "io.github.isamu/mulmocast-vision",
-        "io.github.koki-develop/esa-mcp-server",
-        "io.github.linggen/linggen"
       ]
     },
     {
