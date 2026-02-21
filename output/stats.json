@@ -1,0 +1,178 @@
+{
+  "version": "0.1.0",
+  "generated_at": "2026-02-21T21:51:59.715805Z",
+  "server_count": 2294,
+  "servers_with_repo": 1894,
+  "servers_with_packages": 1504,
+  "score_distribution": [
+    {
+      "label": "High Trust",
+      "min_score": 80,
+      "max_score": 100,
+      "count": 28
+    },
+    {
+      "label": "Moderate Trust",
+      "min_score": 60,
+      "max_score": 79,
+      "count": 391
+    },
+    {
+      "label": "Low Trust",
+      "min_score": 40,
+      "max_score": 59,
+      "count": 1151
+    },
+    {
+      "label": "Very Low Trust",
+      "min_score": 20,
+      "max_score": 39,
+      "count": 720
+    },
+    {
+      "label": "Unknown/Suspicious",
+      "min_score": 0,
+      "max_score": 19,
+      "count": 4
+    }
+  ],
+  "flag_summary": {
+    "TEMPLATE_DESCRIPTION": 464,
+    "NO_SOURCE": 285,
+    "DEAD_ENTRY": 70,
+    "DESCRIPTION_DUPLICATE": 49,
+    "SENSITIVE_CRED_REQUEST": 44,
+    "HIGH_SECRET_DEMAND": 24,
+    "REPO_ARCHIVED": 14,
+    "STAGING_ARTIFACT": 10
+  },
+  "top_servers": [
+    {
+      "name": "io.github.firebase/firebase-mcp",
+      "trust_score": 89,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.googleapis/genai-toolbox",
+      "trust_score": 89,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "com.microsoft/azure",
+      "trust_score": 88,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "com.microsoft/microsoft-fabric",
+      "trust_score": 88,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "com.microsoft/template-server-name",
+      "trust_score": 88,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.github/github-mcp-server",
+      "trust_score": 88,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.basicmachines-co/basic-memory",
+      "trust_score": 86,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.bytedance/mcp-server-browser",
+      "trust_score": 86,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.bytedance/mcp-server-commands",
+      "trust_score": 86,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.bytedance/mcp-server-filesystem",
+      "trust_score": 86,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.bytedance/mcp-server-search",
+      "trust_score": 86,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.apollographql/apollo-mcp-server",
+      "trust_score": 84,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.nrwl/nx-console",
+      "trust_score": 84,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.nrwl/nx-mcp",
+      "trust_score": 84,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.safedep/vet-mcp",
+      "trust_score": 84,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.ChromeDevTools/chrome-devtools-mcp",
+      "trust_score": 83,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.MervinPraison/praisonai",
+      "trust_score": 83,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "com.xcodebuildmcp/XcodeBuildMCP",
+      "trust_score": 82,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.GLips/Figma-Context-MCP",
+      "trust_score": 82,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.IvanMurzak/Unity-MCP",
+      "trust_score": 82,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.netdata/mcp-server",
+      "trust_score": 82,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.robotmcp/ros-mcp-server",
+      "trust_score": 82,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.CursorTouch/Windows-MCP",
+      "trust_score": 81,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.PostHog/mcp",
+      "trust_score": 81,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.dynatrace-oss/Dynatrace-mcp",
+      "trust_score": 81,
+      "trust_label": "High Trust"
+    }
+  ],
+  "average_trust_score": 46.6,
+  "median_trust_score": 49
+}
