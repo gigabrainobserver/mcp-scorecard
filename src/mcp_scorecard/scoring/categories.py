@@ -88,6 +88,7 @@ def score_provenance(
     # has_source_repo
     has_repo = bool(server.get("repo_url"))
     signals["has_source_repo"] = has_repo
+    signals["repo_url"] = server.get("repo_url") or None
     if has_repo:
         points += PROVENANCE_POINTS["has_source_repo"]
 

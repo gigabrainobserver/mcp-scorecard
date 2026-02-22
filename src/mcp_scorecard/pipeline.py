@@ -41,8 +41,8 @@ async def run(output_dir: str | None = None) -> None:
     for server in servers:
         name = server["name"]
         gh = github_data.get(name)
-        result = calculate_scores(server, gh)
         flags = detect_flags(server, gh, flag_context)
+        result = calculate_scores(server, gh, flags=flags)
         result["flags"] = flags
         scored[name] = result
 

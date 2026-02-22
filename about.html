@@ -100,7 +100,6 @@
   <div class="stats-banner">
     <div class="stats-row" id="stats-row">
       <div class="stat"><div class="num" id="s-total">—</div><div class="label">Servers Scored</div></div>
-      <div class="stat"><div class="num" id="s-avg">—</div><div class="label">Avg Score</div></div>
       <div class="stat"><div class="num" id="s-high">—</div><div class="label">High Trust</div></div>
       <div class="stat"><div class="num" id="s-flagged">—</div><div class="label">Flagged</div></div>
       <div class="stat"><div class="num" id="s-updated">—</div><div class="label">Last Updated</div></div>
@@ -110,7 +109,7 @@
   <section>
     <h2>Why This Exists</h2>
     <p>The <a href="https://registry.modelcontextprotocol.io">MCP registry</a> has thousands of servers with zero trust signals. No download counts, no verification, no quality scoring. Agents are increasingly auto-selecting MCP servers and handing them credentials with no way to evaluate trustworthiness.</p>
-    <p>MCP Scorecard is a batch-processed trust scoring index that aggregates publicly available signals from the MCP registry and GitHub. It runs daily, scores every server, and publishes the results as static JSON that anyone — human or agent — can consume.</p>
+    <p>MCP Scorecard is a batch-processed trust scoring index that aggregates publicly available signals from the MCP registry and GitHub. It scores every server and publishes the results as static JSON that anyone — human or agent — can consume.</p>
   </section>
 
   <section>
@@ -206,7 +205,7 @@
 
   <section>
     <h2>Data Access</h2>
-    <p>All data is freely available as static JSON. No API key required. Updated daily.</p>
+    <p>All data is freely available as static JSON. No API key required.</p>
     <div class="endpoint">
       <span class="method">GET</span> <span class="url" id="url-index">output/index.json</span>
       <div class="desc">Per-server scores, signals, and flags for every server in the registry</div>
@@ -223,7 +222,7 @@
 
   <section>
     <h2>How It Works</h2>
-    <p>The pipeline runs daily via GitHub Actions. Four stages, ~70 minutes, all free public APIs.</p>
+    <p>The pipeline runs on-demand. Four stages, ~70 minutes, all free public APIs.</p>
     <div class="endpoint" style="font-size:13px; line-height:1.8;">
       <span style="color:#3fb950;">COLLECT</span> Registry API → 2,300+ servers<br>
       <span style="color:#58a6ff;">ENRICH</span>&nbsp; GitHub API → repo metadata, community profile, commit activity<br>
@@ -248,7 +247,6 @@ async function loadStats() {
     const resp = await fetch('./output/stats.json');
     const s = await resp.json();
     document.getElementById('s-total').textContent = s.server_count.toLocaleString();
-    document.getElementById('s-avg').textContent = s.average_trust_score;
     const high = s.score_distribution.find(d => d.label === 'High Trust');
     document.getElementById('s-high').textContent = high ? high.count : 0;
     const flagged = Object.values(s.flag_summary).reduce((a, b) => a + b, 0);

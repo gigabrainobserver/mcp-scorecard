@@ -6,12 +6,35 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 
+class Badge(BaseModel):
+    key: str
+    type: str  # "flag", "bool", "enum"
+    label: str
+    value: bool | str | None = None
+    severity: str | None = None  # for flags: "critical", "warning", "info"
+    level: str | None = None  # for enums: "good", "neutral", "warning", "critical", "new"
+
+
+class PopularityMetrics(BaseModel):
+    stars: int = 0
+    forks: int = 0
+    watchers: int = 0
+
+
+class BadgeGroups(BaseModel):
+    security: list[Badge] = Field(default_factory=list)
+    provenance: list[Badge] = Field(default_factory=list)
+    activity: list[Badge] = Field(default_factory=list)
+    popularity: PopularityMetrics = Field(default_factory=PopularityMetrics)
+
+
 class ServerScore(BaseModel):
     trust_score: int = Field(ge=0, le=100)
     trust_label: str
     scores: CategoryScores
     signals: dict[str, object]
     flags: list[str] = Field(default_factory=list)
+    badges: BadgeGroups = Field(default_factory=BadgeGroups)
 
 
 class CategoryScores(BaseModel):

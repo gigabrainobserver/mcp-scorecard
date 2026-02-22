@@ -6,6 +6,7 @@ from typing import Any
 
 from mcp_scorecard.config import CATEGORY_WEIGHTS, SCORE_BANDS
 
+from .badges import generate_badges
 from .categories import (
     score_maintenance,
     score_permissions,
@@ -27,9 +28,11 @@ def get_trust_label(score: int) -> str:
 
 
 def calculate_scores(
-    server: ServerEntry, github_data: GitHubData | None
+    server: ServerEntry,
+    github_data: GitHubData | None,
+    flags: list[str] | None = None,
 ) -> dict[str, Any]:
-    """Run all category scorers and compute weighted aggregate.
+    """Run all category scorers, compute weighted aggregate, generate badges.
 
     Returns:
         {
@@ -37,6 +40,7 @@ def calculate_scores(
             "trust_label": str,
             "scores": {"provenance": int, ...},
             "signals": {merged signals dict},
+            "badges": {"security": [...], "provenance": [...], ...},
         }
     """
     # Run each category scorer
@@ -65,9 +69,18 @@ def calculate_scores(
     signals.update(pop_signals)
     signals.update(perm_signals)
 
+    # Generate contextual badges
+    badges = generate_badges(
+        signals=signals,
+        flags=flags or [],
+        server=server,
+        github=github_data,
+    )
+
     return {
         "trust_score": trust_score,
         "trust_label": get_trust_label(trust_score),
         "scores": scores,
         "signals": signals,
+        "badges": badges,
     }

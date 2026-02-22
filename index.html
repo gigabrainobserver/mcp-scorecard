@@ -19,8 +19,9 @@
   .header .meta { font-size: 13px; color: #7d8590; display: flex; gap: 16px; margin-left: auto; }
 
   /* Stats bar */
-  .stats-bar { padding: 16px 32px; border-bottom: 1px solid #21262d; display: flex; gap: 24px; flex-wrap: wrap; }
+  .stats-bar { padding: 16px 32px; border-bottom: 1px solid #21262d; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
   .stat { text-align: center; }
+  .stat-sep { width: 1px; height: 36px; background: #30363d; flex-shrink: 0; }
   .stat .num { font-size: 22px; font-weight: 700; }
   .stat .label { font-size: 11px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; }
   .band-high .num { color: #3fb950; }
@@ -35,47 +36,175 @@
   .search:focus { outline: none; border-color: #58a6ff; }
   .filter-btn { background: #21262d; border: 1px solid #30363d; color: #7d8590; padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; }
   .filter-btn:hover, .filter-btn.active { background: #30363d; color: #e6edf3; border-color: #58a6ff; }
+
+  /* Filter panel */
+  .filter-panel { border-bottom: 1px solid #21262d; }
+  .filter-row { padding: 5px 32px; display: flex; gap: 5px; align-items: center; flex-wrap: nowrap; }
+  .filter-row + .filter-row { border-top: 1px solid rgba(33,38,45,0.5); }
+  .filter-row-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; width: 84px; flex-shrink: 0; }
+  .pill-lead { display: flex; align-items: center; gap: 5px; width: 160px; flex-shrink: 0; }
+  .pill-sep { width: 1px; height: 18px; background: #21262d; flex-shrink: 0; }
+  .pill-rest { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+
+  /* Pill base */
+  .pill {
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid;
+  }
+  .pill .pill-count { font-weight: 400; opacity: 0.6; margin-left: 3px; font-size: 10px; }
+
+  /* Green positive pill (lead pill in each row) */
+  .pill-positive { background: rgba(63,185,80,0.08); border-color: rgba(63,185,80,0.25); color: #3fb950; }
+  .pill-positive:hover { background: rgba(63,185,80,0.18); border-color: #3fb950; }
+  .pill-positive.active { background: rgba(63,185,80,0.3); border-color: #3fb950; color: #fff; }
+
+  /* Row labels */
+  .filter-row-label.credentials { color: #f85149; }
+  .filter-row-label.source { color: #f85149; }
+  .filter-row-label.provenance { color: #3fb950; }
+  .filter-row-label.description { color: #7d8590; }
+  .filter-row-label.activity { color: #a371f7; }
+  .filter-row-label.popularity { color: #d29922; }
+
+  /* Severity pills — match detail badge colors */
+  .pill-critical { background: rgba(248,81,73,0.18); border-color: rgba(248,81,73,0.3); color: #f85149; }
+  .pill-critical:hover { background: rgba(248,81,73,0.28); border-color: #f85149; }
+  .pill-critical.active { background: rgba(248,81,73,0.4); border-color: #f85149; color: #fff; }
+
+  .pill-warning { background: rgba(210,153,34,0.18); border-color: rgba(210,153,34,0.3); color: #d29922; }
+  .pill-warning:hover { background: rgba(210,153,34,0.28); border-color: #d29922; }
+  .pill-warning.active { background: rgba(210,153,34,0.4); border-color: #d29922; color: #fff; }
+
+  .pill-info { background: rgba(110,118,129,0.15); border-color: rgba(110,118,129,0.25); color: #7d8590; }
+  .pill-info:hover { background: rgba(110,118,129,0.25); border-color: #7d8590; }
+  .pill-info.active { background: rgba(110,118,129,0.35); border-color: #7d8590; color: #fff; }
+
+  .pill-good { background: rgba(63,185,80,0.12); border-color: rgba(63,185,80,0.25); color: #3fb950; }
+  .pill-good:hover { background: rgba(63,185,80,0.22); border-color: #3fb950; }
+  .pill-good.active { background: rgba(63,185,80,0.35); border-color: #3fb950; color: #fff; }
+
+  .pill-neutral { background: rgba(136,146,158,0.12); border-color: rgba(136,146,158,0.25); color: #8b949e; }
+  .pill-neutral:hover { background: rgba(136,146,158,0.22); border-color: #8b949e; }
+  .pill-neutral.active { background: rgba(136,146,158,0.35); border-color: #8b949e; color: #fff; }
+
+  .pill-new { background: rgba(163,113,247,0.15); border-color: rgba(163,113,247,0.25); color: #a371f7; }
+  .pill-new:hover { background: rgba(163,113,247,0.25); border-color: #a371f7; }
+  .pill-new.active { background: rgba(163,113,247,0.35); border-color: #a371f7; color: #fff; }
   .sort-select { background: #161b22; border: 1px solid #30363d; color: #e6edf3; padding: 6px 8px; border-radius: 6px; font-size: 12px; }
   .count-label { font-size: 13px; color: #7d8590; margin-left: auto; }
 
-  /* Grid */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: #21262d; padding: 1px; }
+  /* Targets section */
+  .targets-section { border-bottom: 1px solid #21262d; padding: 12px 32px; }
+  .targets-row { display: flex; gap: 5px; align-items: center; flex-wrap: nowrap; padding: 8px 0; border-bottom: 1px solid rgba(33,38,45,0.5); }
+  .targets-row:last-child { border-bottom: none; }
+  .targets-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; width: 84px; flex-shrink: 0; color: #7d8590; }
+  .targets-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+  .target-pill {
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #30363d;
+    background: #161b22;
+    color: #8b949e;
+    transition: all 0.15s;
+  }
+  .target-pill:hover { border-color: #58a6ff; color: #e6edf3; }
+  .target-pill.active { background: rgba(88,166,255,0.15); border-color: #58a6ff; color: #58a6ff; }
+  .target-pill .tp-count { font-weight: 400; opacity: 0.5; margin-left: 3px; font-size: 10px; }
 
-  /* Card */
-  .card { background: #161b22; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
-  .card:hover { background: #1c2128; }
-  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .card-name { font-size: 13px; font-weight: 600; color: #e6edf3; word-break: break-all; line-height: 1.3; }
-  .card-name .ns { color: #7d8590; font-weight: 400; }
+  /* List */
+  .list { display: flex; flex-direction: column; }
 
-  /* Score circle */
-  .score-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
-  .score-high { background: rgba(63,185,80,0.15); color: #3fb950; border: 2px solid #3fb950; }
-  .score-mod { background: rgba(88,166,255,0.15); color: #58a6ff; border: 2px solid #58a6ff; }
-  .score-low { background: rgba(210,153,34,0.15); color: #d29922; border: 2px solid #d29922; }
-  .score-vlow { background: rgba(248,81,73,0.15); color: #f85149; border: 2px solid #f85149; }
-  .score-unk { background: rgba(110,118,129,0.15); color: #6e7681; border: 2px solid #6e7681; }
+  /* Condensed row */
+  .row { display: flex; align-items: center; gap: 12px; padding: 8px 32px; border-bottom: 1px solid #21262d; cursor: pointer; }
+  .row:hover { background: #161b22; }
+  .row.expanded { background: #161b22; border-bottom-color: transparent; }
+  .row-name { font-size: 13px; font-weight: 600; color: #e6edf3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; display: flex; align-items: center; gap: 5px; }
+  .row-name .ns { color: #7d8590; font-weight: 400; }
+  .row-link { color: #58a6ff; text-decoration: none; flex-shrink: 0; font-size: 12px; line-height: 1; opacity: 0.7; }
+  .row-link:hover { opacity: 1; }
 
-  /* Category bars */
-  .cat-bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
-  .cat-bar { display: flex; flex-direction: column; gap: 2px; }
-  .cat-bar .bar-label { font-size: 9px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.3px; }
-  .cat-bar .bar-track { height: 4px; background: #21262d; border-radius: 2px; overflow: hidden; }
-  .cat-bar .bar-fill { height: 100%; border-radius: 2px; }
+  /* Score pill in row */
+  .score-pill { padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; flex-shrink: 0; min-width: 32px; text-align: center; }
+  .score-high { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .score-mod { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .score-low { background: rgba(210,153,34,0.15); color: #d29922; }
+  .score-vlow { background: rgba(248,81,73,0.15); color: #f85149; }
+  .score-unk { background: rgba(110,118,129,0.15); color: #6e7681; }
 
-  /* Signals */
-  .signals { display: flex; flex-wrap: wrap; gap: 4px; }
-  .signal { font-size: 10px; padding: 1px 6px; border-radius: 3px; }
-  .signal-yes { background: rgba(63,185,80,0.15); color: #3fb950; }
-  .signal-no { background: rgba(110,118,129,0.1); color: #484f58; }
+  /* Inline flags in condensed row */
+  .row-flags { display: flex; gap: 4px; flex-shrink: 0; }
+  .row-flag { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+  .row-flag-critical { background: rgba(248,81,73,0.18); color: #f85149; }
+  .row-flag-warning { background: rgba(210,153,34,0.18); color: #d29922; }
+  .row-flag-info { background: rgba(110,118,129,0.12); color: #7d8590; }
 
-  /* Flags */
-  .flags { display: flex; flex-wrap: wrap; gap: 4px; }
-  .flag { font-size: 10px; padding: 2px 6px; border-radius: 3px; background: rgba(248,81,73,0.15); color: #f85149; font-weight: 600; }
+  /* Row targets */
+  .row-targets { display: flex; gap: 3px; flex-shrink: 0; margin-left: auto; }
+  .row-target { font-size: 10px; padding: 1px 5px; border-radius: 3px; background: rgba(88,166,255,0.08); color: #58a6ff; white-space: nowrap; }
 
-  /* Permissions detail */
-  .perm-detail { font-size: 11px; color: #7d8590; }
-  .perm-detail span { margin-right: 8px; }
+  /* Row popularity metrics */
+  .row-pop { display: flex; gap: 10px; font-size: 11px; color: #7d8590; flex-shrink: 0; }
+  .row-pop span { display: flex; align-items: center; gap: 2px; }
+  .row-pop .val { color: #8b949e; font-weight: 600; }
+
+  /* Expand chevron */
+  .row-chevron { color: #484f58; font-size: 10px; flex-shrink: 0; transition: transform 0.15s; }
+  .row.expanded .row-chevron { transform: rotate(90deg); }
+
+  /* Detail panel */
+  .detail { display: none; padding: 12px 32px 16px 76px; background: #161b22; border-bottom: 1px solid #21262d; }
+  .detail.open { display: flex; flex-direction: column; gap: 10px; }
+
+  /* Badge groups */
+  .badge-group { display: flex; flex-direction: column; gap: 4px; }
+  .badge-group-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #484f58; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 3px; }
+
+  /* Badge base */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 3px;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  /* Security flag badges */
+  .badge-flag-critical { background: rgba(248,81,73,0.18); color: #f85149; font-weight: 700; }
+  .badge-flag-warning { background: rgba(210,153,34,0.18); color: #d29922; font-weight: 600; }
+  .badge-flag-info { background: rgba(110,118,129,0.15); color: #7d8590; }
+
+  /* Boolean badges */
+  .badge-bool-true { background: rgba(63,185,80,0.12); color: #3fb950; }
+  .badge-bool-false { background: rgba(110,118,129,0.08); color: #393e46; }
+
+  /* Enum badges by level */
+  .badge-enum-good { background: rgba(63,185,80,0.12); color: #3fb950; }
+  .badge-enum-neutral { background: rgba(136,146,158,0.12); color: #8b949e; }
+  .badge-enum-warning { background: rgba(210,153,34,0.15); color: #d29922; }
+  .badge-enum-critical { background: rgba(248,81,73,0.15); color: #f85149; }
+  .badge-enum-new { background: rgba(163,113,247,0.15); color: #a371f7; }
+
+  /* Detail popularity */
+  .detail-pop {
+    display: flex;
+    gap: 14px;
+    font-size: 11px;
+    color: #7d8590;
+  }
+  .detail-pop span { display: flex; align-items: center; gap: 3px; }
+  .detail-pop .val { color: #e6edf3; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -97,20 +226,34 @@
 <div class="controls">
   <input type="text" class="search" id="search" placeholder="Search servers...">
   <select class="sort-select" id="sort">
-    <option value="score-desc">Score: High → Low</option>
-    <option value="score-asc">Score: Low → High</option>
-    <option value="name-asc">Name: A → Z</option>
+    <option value="score-desc">Score: High &rarr; Low</option>
+    <option value="score-asc">Score: Low &rarr; High</option>
+    <option value="name-asc">Name: A &rarr; Z</option>
     <option value="flags-desc">Most Flags</option>
+    <option value="stars-desc">Most Stars</option>
   </select>
-  <div id="flag-filters" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
   <span class="count-label" id="count-label"></span>
 </div>
 
-<div class="grid" id="grid"></div>
+<div class="filter-panel" id="filter-panel"></div>
+
+<div class="targets-section" id="targets-section"></div>
+
+<div class="list" id="list"></div>
 
 <script>
 let allServers = [];
-let activeFlags = new Set();
+let activeTarget = null; // Currently selected target filter
+
+// Filter state: per-row sets. Within a row = OR, across rows = AND.
+const filters = {
+  credentials: new Set(),
+  source: new Set(),
+  quality: new Set(),
+  provenance: new Set(),
+  activity: new Set(),
+  popularity: new Set(),
+};
 
 function scoreClass(s) {
   if (s >= 80) return 'high';
@@ -120,74 +263,153 @@ function scoreClass(s) {
   return 'unk';
 }
 
-function barColor(s) {
-  if (s >= 80) return '#3fb950';
-  if (s >= 60) return '#58a6ff';
-  if (s >= 40) return '#d29922';
-  if (s >= 20) return '#f85149';
-  return '#6e7681';
+function fmtNum(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+  return String(n);
 }
 
-const SIGNAL_LABELS = {
-  has_source_repo: 'Repo',
-  has_license: 'License',
-  has_installable_package: 'Package',
-  has_website_url: 'Website',
-  has_icon: 'Icon',
-  has_security_md: 'SECURITY.md',
-  has_code_of_conduct: 'CoC',
-  namespace_matches_owner: 'NS Match',
-  repo_not_archived: 'Active Repo',
-  unique_description: 'Unique Desc',
+const FLAG_SEV = {
+  'DEAD_ENTRY':'critical','NO_SOURCE':'critical','SENSITIVE_CRED_REQUEST':'critical',
+  'HIGH_SECRET_DEMAND':'warning','STAGING_ARTIFACT':'warning','REPO_ARCHIVED':'warning',
+  'TEMPLATE_DESCRIPTION':'info','DESCRIPTION_DUPLICATE':'info',
+};
+const FLAG_SHORT = {
+  'SENSITIVE_CRED_REQUEST':'Sensitive Creds','DEAD_ENTRY':'Dead Entry','NO_SOURCE':'No Source',
+  'HIGH_SECRET_DEMAND':'Many Secrets','REPO_ARCHIVED':'Archived','STAGING_ARTIFACT':'Staging',
+  'DESCRIPTION_DUPLICATE':'Dup Desc','TEMPLATE_DESCRIPTION':'Template',
 };
 
-function renderCard(name, s) {
+function renderBadge(b) {
+  if (b.type === 'flag') return `<span class="badge badge-flag-${b.severity}">${b.label}</span>`;
+  if (b.type === 'bool') return `<span class="badge ${b.value ? 'badge-bool-true' : 'badge-bool-false'}">${b.label}</span>`;
+  if (b.type === 'enum') return `<span class="badge badge-enum-${b.level}">${b.label}: ${b.value}</span>`;
+  return '';
+}
+
+function renderRow(name, s, idx) {
   const cls = scoreClass(s.trust_score);
   const parts = name.split('/');
   const ns = parts[0];
   const id = parts.slice(1).join('/');
+  const badges = s.badges || {};
+  const pop = badges.popularity || {};
+  const repoUrl = s.signals?.repo_url || null;
+  const linkIcon = repoUrl
+    ? `<a class="row-link" href="${repoUrl}" target="_blank" rel="noopener" title="${repoUrl}" onclick="event.stopPropagation()"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"/></svg></a>`
+    : '';
 
-  // Provenance signals
-  let sigs = '';
-  for (const [key, label] of Object.entries(SIGNAL_LABELS)) {
-    const val = s.signals[key];
-    sigs += `<span class="signal ${val ? 'signal-yes' : 'signal-no'}">${label}</span>`;
-  }
+  // Condensed row: flags (only critical/warning in condensed view)
+  const rowFlags = s.flags
+    .filter(f => FLAG_SEV[f] !== 'info')
+    .map(f => `<span class="row-flag row-flag-${FLAG_SEV[f] || 'info'}">${FLAG_SHORT[f] || f}</span>`)
+    .join('');
 
-  // Flags
-  let flagsHtml = '';
-  if (s.flags.length > 0) {
-    flagsHtml = '<div class="flags">' + s.flags.map(f => `<span class="flag">${f}</span>`).join('') + '</div>';
-  }
+  // Condensed row: targets
+  const rowTargets = (s.targets || [])
+    .map(t => `<span class="row-target">${t}</span>`)
+    .join('');
 
-  // Permissions detail
-  const secrets = s.signals.secret_env_var_count || 0;
-  const transport = s.signals.transport_type_risk || 0;
-  const cred = s.signals.credential_sensitivity || 0;
-  let permHtml = `<div class="perm-detail">`;
-  if (secrets > 0) permHtml += `<span>🔑 ${secrets} secret${secrets > 1 ? 's' : ''}</span>`;
-  permHtml += `<span>⬡ transport:${transport}</span>`;
-  permHtml += `<span>🛡 cred:${cred}</span>`;
-  permHtml += `</div>`;
+  // Condensed row: popularity
+  const popParts = [];
+  if (pop.stars > 0) popParts.push(`<span>&#9733; <span class="val">${fmtNum(pop.stars)}</span></span>`);
+  if (pop.forks > 0) popParts.push(`<span>&#9741; <span class="val">${fmtNum(pop.forks)}</span></span>`);
+  if (pop.watchers > 0) popParts.push(`<span>&#9737; <span class="val">${fmtNum(pop.watchers)}</span></span>`);
 
-  return `<div class="card" data-name="${name}" data-score="${s.trust_score}" data-flags="${s.flags.join(',')}">
-    <div class="card-top">
-      <div class="card-name"><span class="ns">${ns}/</span>${id}</div>
-      <div class="score-circle score-${cls}">${s.trust_score}</div>
+  // Detail: badge groups
+  const secBadges = (badges.security || []).map(renderBadge).join('');
+  const provBadges = (badges.provenance || []).map(renderBadge).join('');
+  const actBadges = (badges.activity || []).map(renderBadge).join('');
+
+  const detailPop = (pop.stars > 0 || pop.forks > 0)
+    ? `<div class="detail-pop">
+        ${pop.stars > 0 ? `<span>&#9733; <span class="val">${fmtNum(pop.stars)}</span> stars</span>` : ''}
+        ${pop.forks > 0 ? `<span>&#9741; <span class="val">${fmtNum(pop.forks)}</span> forks</span>` : ''}
+        ${pop.watchers > 0 ? `<span>&#9737; <span class="val">${fmtNum(pop.watchers)}</span> watchers</span>` : ''}
+      </div>` : '';
+
+  return `<div class="row" data-idx="${idx}" onclick="toggleDetail(${idx})">
+      <span class="row-chevron">&#9654;</span>
+      <span class="score-pill score-${cls}">${s.trust_score}</span>
+      <span class="row-name">${linkIcon}<span class="ns">${ns}/</span>${id}</span>
+      <span class="row-flags">${rowFlags}</span>
+      <span class="row-targets">${rowTargets}</span>
+      <span class="row-pop">${popParts.join('')}</span>
     </div>
-    <div class="cat-bars">
-      ${['provenance','maintenance','popularity','permissions'].map(cat => {
-        const v = s.scores[cat];
-        return `<div class="cat-bar">
-          <span class="bar-label">${cat.slice(0,4)}</span>
-          <div class="bar-track"><div class="bar-fill" style="width:${v}%;background:${barColor(v)}"></div></div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="signals">${sigs}</div>
-    ${permHtml}
-    ${flagsHtml}
-  </div>`;
+    <div class="detail" id="detail-${idx}">
+      <div class="badge-group"><span class="badge-group-label">Security</span><div class="badge-row">${secBadges}</div></div>
+      <div class="badge-group"><span class="badge-group-label">Provenance</span><div class="badge-row">${provBadges}</div></div>
+      <div class="badge-group"><span class="badge-group-label">Activity</span><div class="badge-row">${actBadges}</div></div>
+      ${detailPop}
+    </div>`;
+}
+
+function toggleDetail(idx) {
+  const row = document.querySelector(`.row[data-idx="${idx}"]`);
+  const detail = document.getElementById('detail-' + idx);
+  const wasOpen = detail.classList.contains('open');
+  // Close any open detail
+  document.querySelectorAll('.detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!wasOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+// Flag groupings
+const CRED_FLAGS = ['SENSITIVE_CRED_REQUEST', 'HIGH_SECRET_DEMAND'];
+const SOURCE_FLAGS = ['DEAD_ENTRY', 'NO_SOURCE', 'REPO_ARCHIVED'];
+const QUALITY_FLAGS = ['TEMPLATE_DESCRIPTION', 'DESCRIPTION_DUPLICATE', 'STAGING_ARTIFACT'];
+
+// Filter matchers — returns true if server matches ANY active pill in the row. Across rows = AND.
+function matchRow(s, cat) {
+  const f = filters[cat];
+  if (f.size === 0) return true;
+  // Positive pills start with +
+  for (const v of f) {
+    if (v.startsWith('+')) {
+      // Positive: must have NONE of the group's flags
+      if (v === '+clean_creds' && !s.flags.some(fl => CRED_FLAGS.includes(fl))) return true;
+      if (v === '+has_source' && !s.flags.some(fl => SOURCE_FLAGS.includes(fl))) return true;
+      if (v === '+original' && !s.flags.some(fl => QUALITY_FLAGS.includes(fl))) return true;
+      if (v === '+full_prov') {
+        const prov = s.badges?.provenance || [];
+        const has = (k) => prov.find(p => p.key === k)?.value;
+        if (has('has_source_repo') && has('has_license') && has('has_installable_package')) return true;
+      }
+      if (v === '+active') {
+        const act = s.badges?.activity || [];
+        const commits = act.find(a => a.key === 'commit_activity')?.value;
+        const push = act.find(a => a.key === 'last_push')?.value;
+        if ((commits === 'active' || commits === 'regular') && (push === '< 30 days' || push === '< 6 months')) return true;
+      }
+      if (v === '+popular') {
+        if ((s.badges?.popularity?.stars || 0) >= 100) return true;
+      }
+    }
+    // Flag-based pills
+    else if (s.flags.includes(v)) return true;
+    // Provenance missing pills
+    else if (v.startsWith('no:')) {
+      const prov = s.badges?.provenance || [];
+      const p = prov.find(p => p.key === v.slice(3));
+      if (p && !p.value) return true;
+    }
+    // Star pills
+    else if (v === 'stars:0' && (s.badges?.popularity?.stars || 0) === 0) return true;
+    else if (v === 'stars:10' && (s.badges?.popularity?.stars || 0) >= 10) return true;
+    else if (v === 'stars:100' && (s.badges?.popularity?.stars || 0) >= 100) return true;
+    else if (v === 'stars:1000' && (s.badges?.popularity?.stars || 0) >= 1000) return true;
+    // Activity enum pills
+    else if (v.includes(':')) {
+      const act = s.badges?.activity || [];
+      for (const a of act) {
+        if ((a.key + ':' + a.value) === v) return true;
+      }
+    }
+  }
+  return false;
 }
 
 function render() {
@@ -196,7 +418,10 @@ function render() {
 
   let filtered = allServers.filter(([name, s]) => {
     if (q && !name.toLowerCase().includes(q)) return false;
-    if (activeFlags.size > 0 && !s.flags.some(f => activeFlags.has(f))) return false;
+    if (activeTarget && !(s.targets || []).includes(activeTarget)) return false;
+    for (const cat of Object.keys(filters)) {
+      if (!matchRow(s, cat)) return false;
+    }
     return true;
   });
 
@@ -205,8 +430,9 @@ function render() {
   else if (sort === 'score-asc') filtered.sort((a, b) => a[1].trust_score - b[1].trust_score);
   else if (sort === 'name-asc') filtered.sort((a, b) => a[0].localeCompare(b[0]));
   else if (sort === 'flags-desc') filtered.sort((a, b) => b[1].flags.length - a[1].flags.length || b[1].trust_score - a[1].trust_score);
+  else if (sort === 'stars-desc') filtered.sort((a, b) => ((b[1].badges?.popularity?.stars||0) - (a[1].badges?.popularity?.stars||0)));
 
-  document.getElementById('grid').innerHTML = filtered.map(([n, s]) => renderCard(n, s)).join('');
+  document.getElementById('list').innerHTML = filtered.map(([n, s], i) => renderRow(n, s, i)).join('');
   document.getElementById('count-label').textContent = `${filtered.length} of ${allServers.length} servers`;
 }
 
@@ -233,26 +459,212 @@ async function init() {
 
   document.getElementById('stats-bar').innerHTML = `
     <div class="stat"><div class="num">${allServers.length}</div><div class="label">Servers</div></div>
-    <div class="stat"><div class="num">${avg}</div><div class="label">Avg Score</div></div>
+    <div class="stat-sep"></div>
     <div class="stat band-high"><div class="num">${bands.high}</div><div class="label">High Trust</div></div>
     <div class="stat band-mod"><div class="num">${bands.mod}</div><div class="label">Moderate</div></div>
     <div class="stat band-low"><div class="num">${bands.low}</div><div class="label">Low Trust</div></div>
     <div class="stat band-vlow"><div class="num">${bands.vlow}</div><div class="label">Very Low</div></div>
+    <div class="stat-sep"></div>
     <div class="stat band-unk"><div class="num">${bands.unk}</div><div class="label">Suspicious</div></div>
     <div class="stat"><div class="num" style="color:#f85149">${flagged}</div><div class="label">Flagged</div></div>
   `;
 
-  // Flag filter buttons
-  const sortedFlags = Object.entries(flagCounts).sort((a, b) => b[1] - a[1]);
-  document.getElementById('flag-filters').innerHTML = sortedFlags.map(([f, c]) =>
-    `<button class="filter-btn" data-flag="${f}">${f} (${c})</button>`
-  ).join('');
+  // --- Build filter panel ---
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
+  // Pre-compute counts
+  const provCounts = {};
+  const actCounts = {};
+  let starBuckets = { 0: 0, 10: 0, 100: 0, 1000: 0 };
+  let cleanCreds = 0, hasSource = 0, original = 0, fullProv = 0, activeDevs = 0, popular = 0;
+
+  for (const [, s] of allServers) {
+    // Positive counts
+    if (!s.flags.some(f => CRED_FLAGS.includes(f))) cleanCreds++;
+    if (!s.flags.some(f => SOURCE_FLAGS.includes(f))) hasSource++;
+    if (!s.flags.some(f => QUALITY_FLAGS.includes(f))) original++;
+
+    const prov = s.badges?.provenance || [];
+    const has = (k) => prov.find(p => p.key === k)?.value;
+    if (has('has_source_repo') && has('has_license') && has('has_installable_package')) fullProv++;
+
+    const act = s.badges?.activity || [];
+    const commits = act.find(a => a.key === 'commit_activity')?.value;
+    const push = act.find(a => a.key === 'last_push')?.value;
+    if ((commits === 'active' || commits === 'regular') && (push === '< 30 days' || push === '< 6 months')) activeDevs++;
+
+    const stars = s.badges?.popularity?.stars || 0;
+    if (stars >= 100) popular++;
+    if (stars === 0) starBuckets[0]++;
+    if (stars >= 10) starBuckets[10]++;
+    if (stars >= 100) starBuckets[100]++;
+    if (stars >= 1000) starBuckets[1000]++;
+
+    // Provenance missing
+    for (const b of prov) {
+      if (!b.value) provCounts['no:' + b.key] = (provCounts['no:' + b.key] || 0) + 1;
+    }
+    // Activity enums
+    for (const b of act) {
+      const k = b.key + ':' + b.value;
+      actCounts[k] = (actCounts[k] || 0) + 1;
+    }
+  }
+
+  const sep = '<span class="pill-sep"></span>';
+  function pillRow(posPill, negPills) {
+    return `<div class="pill-lead">${posPill}${sep}</div><div class="pill-rest">${negPills}</div>`;
+  }
+
+  // Severity per flag — matches badge-flag-{severity} in detail view
+  const PILL_SEV = {
+    'SENSITIVE_CRED_REQUEST': 'critical', 'HIGH_SECRET_DEMAND': 'warning',
+    'DEAD_ENTRY': 'critical', 'NO_SOURCE': 'critical', 'REPO_ARCHIVED': 'warning',
+    'TEMPLATE_DESCRIPTION': 'info', 'DESCRIPTION_DUPLICATE': 'info', 'STAGING_ARTIFACT': 'warning',
+  };
+  // Activity pill levels — matches badge-enum-{level} in detail view
+  const ACT_SEV = {
+    'commit_activity:dormant': 'critical', 'last_push:> 1 year': 'critical',
+    'contributors:solo': 'neutral', 'repo_age:< 90 days': 'new',
+    'contributors:community': 'good',
+  };
+
+  function flagPill(flag, label, cat) {
+    const sev = PILL_SEV[flag] || 'info';
+    return `<button class="pill pill-${sev}" data-cat="${cat}" data-val="${flag}">${label}<span class="pill-count">${flagCounts[flag]}</span></button>`;
+  }
+
+  // Row 1: Credentials
+  const credPills = pillRow(
+    `<button class="pill pill-positive" data-cat="credentials" data-val="+clean_creds">Clean Credentials<span class="pill-count">${cleanCreds}</span></button>`,
+    [['SENSITIVE_CRED_REQUEST', 'Sensitive Creds'], ['HIGH_SECRET_DEMAND', 'Many Secrets']]
+      .filter(([f]) => flagCounts[f])
+      .map(([f, l]) => flagPill(f, l, 'credentials')).join('')
+  );
+
+  // Row 2: Source
+  const srcPills = pillRow(
+    `<button class="pill pill-positive" data-cat="source" data-val="+has_source">Has Source<span class="pill-count">${hasSource}</span></button>`,
+    [['DEAD_ENTRY', 'Dead Entry'], ['NO_SOURCE', 'No Source'], ['REPO_ARCHIVED', 'Archived']]
+      .filter(([f]) => flagCounts[f])
+      .map(([f, l]) => flagPill(f, l, 'source')).join('')
+  );
+
+  // Row 3: Description
+  const qualPills = pillRow(
+    `<button class="pill pill-positive" data-cat="quality" data-val="+original">Original<span class="pill-count">${original}</span></button>`,
+    [['TEMPLATE_DESCRIPTION', 'Template Desc'], ['DESCRIPTION_DUPLICATE', 'Duplicate Desc'], ['STAGING_ARTIFACT', 'Staging']]
+      .filter(([f]) => flagCounts[f])
+      .map(([f, l]) => flagPill(f, l, 'quality')).join('')
+  );
+
+  // Row 4: Provenance — missing signals show as warning (matches badge-bool-false tone)
+  const provPills = pillRow(
+    `<button class="pill pill-positive" data-cat="provenance" data-val="+full_prov">Full Provenance<span class="pill-count">${fullProv}</span></button>`,
+    [
+      ['no:has_source_repo', 'No Repo'], ['no:has_license', 'No License'],
+      ['no:has_installable_package', 'No Package'], ['no:namespace_matches_owner', 'No NS Match'],
+      ['no:has_security_md', 'No SECURITY.md'],
+    ].filter(([k]) => provCounts[k])
+     .map(([k, l]) => `<button class="pill pill-warning" data-cat="provenance" data-val="${k}">${l}<span class="pill-count">${provCounts[k]}</span></button>`).join('')
+  );
+
+  // Row 5: Activity — each pill matches its enum level in detail view
+  const actPills = pillRow(
+    `<button class="pill pill-positive" data-cat="activity" data-val="+active">Active<span class="pill-count">${activeDevs}</span></button>`,
+    [
+      ['commit_activity:dormant', 'Dormant'], ['last_push:> 1 year', 'Stale > 1yr'],
+      ['contributors:solo', 'Solo Dev'], ['repo_age:< 90 days', 'New Repo'],
+      ['contributors:community', 'Community'],
+    ].filter(([k]) => actCounts[k])
+     .map(([k, l]) => `<button class="pill pill-${ACT_SEV[k] || 'neutral'}" data-cat="activity" data-val="${k}">${l}<span class="pill-count">${actCounts[k]}</span></button>`).join('')
+  );
+
+  // Row 6: Popularity — neutral for low, good for high
+  const popPills = pillRow(
+    `<button class="pill pill-positive" data-cat="popularity" data-val="+popular">Popular<span class="pill-count">${popular}</span></button>`,
+    [ ['stars:0', 'No Stars', starBuckets[0], 'neutral'], ['stars:10', '10+', starBuckets[10], 'neutral'],
+       ['stars:100', '100+', starBuckets[100], 'good'], ['stars:1000', '1k+', starBuckets[1000], 'good'] ]
+      .filter(([,,c]) => c > 0)
+      .map(([v, l, c, sev]) => `<button class="pill pill-${sev}" data-cat="popularity" data-val="${v}">${l}<span class="pill-count">${c}</span></button>`).join('')
+  );
+
+  document.getElementById('filter-panel').innerHTML = `
+    <div class="filter-row"><span class="filter-row-label credentials">Credentials</span>${credPills}</div>
+    <div class="filter-row"><span class="filter-row-label source">Source</span>${srcPills}</div>
+    <div class="filter-row"><span class="filter-row-label provenance">Provenance</span>${provPills}</div>
+    <div class="filter-row"><span class="filter-row-label description">Description</span>${qualPills}</div>
+    <div class="filter-row"><span class="filter-row-label activity">Activity</span>${actPills}</div>
+    <div class="filter-row"><span class="filter-row-label popularity">Popularity</span>${popPills}</div>
+  `;
+
+  // Wire up all pills
+  document.querySelectorAll('.pill').forEach(btn => {
     btn.addEventListener('click', () => {
-      const flag = btn.dataset.flag;
-      if (activeFlags.has(flag)) { activeFlags.delete(flag); btn.classList.remove('active'); }
-      else { activeFlags.add(flag); btn.classList.add('active'); }
+      const cat = btn.dataset.cat;
+      const val = btn.dataset.val;
+      if (filters[cat].has(val)) { filters[cat].delete(val); btn.classList.remove('active'); }
+      else { filters[cat].add(val); btn.classList.add('active'); }
+      render();
+    });
+  });
+
+  // --- Build targets section ---
+  const CAT_ORDER = [
+    ['services', 'Services'],
+    ['databases', 'Databases'],
+    ['infra', 'Infra'],
+    ['tools', 'Dev Tools'],
+  ];
+  const TARGET_CAT = {
+    'GitHub':'services','Slack':'services','Notion':'services','Google Calendar':'services',
+    'Google Docs':'services','Google Sheets':'services','Google Drive':'services','Gmail':'services',
+    'Jira':'services','Confluence':'services','Linear':'services','Discord':'services',
+    'Telegram':'services','Twitter/X':'services','Trello':'services','Asana':'services',
+    'ClickUp':'services','Salesforce':'services','HubSpot':'services','Stripe':'services',
+    'Shopify':'services','Airtable':'services','YouTube':'services','Spotify':'services',
+    'Obsidian':'services','WordPress':'services','Todoist':'services',
+    'PostgreSQL':'databases','MySQL':'databases','MongoDB':'databases','SQLite':'databases',
+    'Redis':'databases','Elasticsearch':'databases','Supabase':'databases','Firebase':'databases',
+    'Neo4j':'databases','Pinecone':'databases','Qdrant':'databases','ChromaDB':'databases','Weaviate':'databases',
+    'Docker':'infra','Kubernetes':'infra','AWS':'infra','Azure':'infra',
+    'Cloudflare':'infra','Vercel':'infra','Terraform':'infra',
+    'Git':'tools','Puppeteer':'tools','Playwright':'tools','Sentry':'tools','Datadog':'tools','Grafana':'tools',
+  };
+
+  // Count servers per target
+  const targetCounts = {};
+  for (const [, s] of allServers) {
+    for (const t of (s.targets || [])) {
+      targetCounts[t] = (targetCounts[t] || 0) + 1;
+    }
+  }
+
+  // Build rows — top 10 per category by count
+  let targetsHTML = '';
+  for (const [catKey, catLabel] of CAT_ORDER) {
+    const targets = Object.entries(targetCounts)
+      .filter(([t]) => TARGET_CAT[t] === catKey)
+      .sort((a, b) => b[1] - a[1]);
+    if (!targets.length) continue;
+    const pills = targets.map(([t, c]) =>
+      `<button class="target-pill" data-target="${t}">${t}<span class="tp-count">${c}</span></button>`
+    ).join('');
+    targetsHTML += `<div class="targets-row"><span class="targets-label">${catLabel}</span><div class="targets-pills">${pills}</div></div>`;
+  }
+  document.getElementById('targets-section').innerHTML = targetsHTML;
+
+  // Wire up target pills — single select toggle
+  document.querySelectorAll('.target-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.target;
+      if (activeTarget === t) {
+        activeTarget = null;
+        btn.classList.remove('active');
+      } else {
+        document.querySelectorAll('.target-pill.active').forEach(b => b.classList.remove('active'));
+        activeTarget = t;
+        btn.classList.add('active');
+      }
       render();
     });
   });

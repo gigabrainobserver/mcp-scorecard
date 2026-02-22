@@ -10,9 +10,12 @@ from statistics import median
 
 from mcp_scorecard.config import OUTPUT_DIR, SCORE_BANDS
 from mcp_scorecard.output.models import (
+    Badge,
+    BadgeGroups,
     CategoryScores,
     FlagGroup,
     FlagsIndex,
+    PopularityMetrics,
     ScoreBand,
     ScorecardIndex,
     ServerScore,
@@ -46,12 +49,21 @@ def _build_index(
 ) -> ScorecardIndex:
     servers = {}
     for name, data in scored_servers.items():
+        # Build badge models from raw badge dicts
+        raw_badges = data.get("badges", {})
+        badge_groups = BadgeGroups(
+            security=[Badge(**b) for b in raw_badges.get("security", [])],
+            provenance=[Badge(**b) for b in raw_badges.get("provenance", [])],
+            activity=[Badge(**b) for b in raw_badges.get("activity", [])],
+            popularity=PopularityMetrics(**raw_badges.get("popularity", {})),
+        )
         servers[name] = ServerScore(
             trust_score=data["trust_score"],
             trust_label=data["trust_label"],
             scores=CategoryScores(**data["scores"]),
             signals=data["signals"],
             flags=data["flags"],
+            badges=badge_groups,
         )
     return ScorecardIndex(
         generated_at=now,
