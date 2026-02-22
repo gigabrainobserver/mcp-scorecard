@@ -117,9 +117,16 @@ def detect_flags(
     """
     flags: list[str] = []
 
-    # 1. DEAD_ENTRY — no packages and no remotes
+    # 1. DEAD_ENTRY — no packages and no remotes, AND no active source repo
     if not server.get("has_packages") and not server.get("has_remotes"):
-        flags.append("DEAD_ENTRY")
+        has_active_repo = (
+            server.get("repo_url")
+            and github is not None
+            and not github.get("github_archived", False)
+            and (github.get("github_commit_weeks_active") or 0) > 0
+        )
+        if not has_active_repo:
+            flags.append("DEAD_ENTRY")
 
     # 2. TEMPLATE_DESCRIPTION
     desc = server.get("description") or ""
