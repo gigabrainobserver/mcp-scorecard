@@ -56,7 +56,7 @@ The pipeline produces three JSON files:
 
 ```json
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "generated_at": "2026-02-22T06:00:00Z",
   "server_count": 2278,
   "servers": {

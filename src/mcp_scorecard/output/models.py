@@ -46,7 +46,7 @@ class CategoryScores(BaseModel):
 
 
 class ScorecardIndex(BaseModel):
-    version: str = "0.1.0"
+    version: str = "1.0.0"
     generated_at: datetime
     server_count: int
     servers: dict[str, ServerScore]
@@ -59,7 +59,7 @@ class FlagGroup(BaseModel):
 
 
 class FlagsIndex(BaseModel):
-    version: str = "0.1.0"
+    version: str = "1.0.0"
     generated_at: datetime
     flags: list[FlagGroup]
 
@@ -72,7 +72,7 @@ class ScoreBand(BaseModel):
 
 
 class StatsIndex(BaseModel):
-    version: str = "0.1.0"
+    version: str = "1.0.0"
     generated_at: datetime
     server_count: int
     servers_with_repo: int

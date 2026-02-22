@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mcp-scorecard"
-version = "0.1.0"
+version = "1.0.0"
 description = "Trust scoring index for MCP servers"
 readme = "README.md"
 license = "MIT"
