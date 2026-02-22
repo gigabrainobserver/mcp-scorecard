@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publishers — MCP Scorecard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #e6edf3; }
+
+  .header { padding: 24px 32px; border-bottom: 1px solid #21262d; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .header h1 { font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .header h1 a { color: #e6edf3; text-decoration: none; }
+  .header h1 a:hover { color: #58a6ff; }
+  .header .nav { display: flex; gap: 16px; font-size: 13px; }
+  .header .nav a { color: #7d8590; text-decoration: none; }
+  .header .nav a:hover { color: #58a6ff; }
+
+  .controls { padding: 12px 32px; border-bottom: 1px solid #21262d; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search { background: #161b22; border: 1px solid #30363d; color: #e6edf3; padding: 6px 12px; border-radius: 6px; font-size: 14px; width: 280px; }
+  .search:focus { outline: none; border-color: #58a6ff; }
+  .sort-select { background: #161b22; border: 1px solid #30363d; color: #e6edf3; padding: 6px 8px; border-radius: 6px; font-size: 12px; }
+  .count-label { font-size: 13px; color: #7d8590; margin-left: auto; }
+
+  .list { display: flex; flex-direction: column; }
+
+  .pub-row { display: flex; align-items: center; gap: 12px; padding: 8px 32px; border-bottom: 1px solid #21262d; cursor: pointer; text-decoration: none; }
+  .pub-row:hover { background: #161b22; }
+  .pub-name { font-size: 13px; font-weight: 600; color: #e6edf3; display: flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .verified-badge { flex-shrink: 0; display: inline-flex; align-items: center; }
+
+  .score-pill { padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; flex-shrink: 0; min-width: 32px; text-align: center; }
+  .score-high { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .score-mod { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .score-low { background: rgba(210,153,34,0.15); color: #d29922; }
+  .score-vlow { background: rgba(248,81,73,0.15); color: #f85149; }
+  .score-unk { background: rgba(110,118,129,0.15); color: #6e7681; }
+
+  .pub-meta { display: flex; gap: 10px; font-size: 11px; color: #7d8590; flex-shrink: 0; }
+  .pub-meta span { display: flex; align-items: center; gap: 2px; }
+  .pub-meta .val { color: #8b949e; font-weight: 600; }
+
+  .pub-servers { font-size: 11px; color: #7d8590; flex-shrink: 0; white-space: nowrap; }
+  .pub-servers .val { color: #8b949e; font-weight: 600; }
+
+  .pub-flags { display: flex; gap: 4px; flex-shrink: 0; }
+  .pub-flag { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+  .pub-flag-critical { background: rgba(248,81,73,0.18); color: #f85149; }
+  .pub-flag-warning { background: rgba(210,153,34,0.18); color: #d29922; }
+
+  .pub-chevron { color: #484f58; font-size: 10px; flex-shrink: 0; }
+
+  .footer { padding: 24px 32px; border-top: 1px solid #21262d; text-align: center; font-size: 12px; color: #484f58; margin-top: auto; }
+  .footer a { color: #58a6ff; text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><a href="./">MCP Scorecard</a></h1>
+  <div class="nav">
+    <a href="./">All Servers</a>
+    <a href="about.html">About</a>
+    <a href="https://github.com/gigabrainobserver/mcp-scorecard">GitHub</a>
+  </div>
+</div>
+
+<div class="controls">
+  <input type="text" class="search" id="search" placeholder="Search publishers...">
+  <select class="sort-select" id="sort">
+    <option value="score-desc">Avg Score: High &rarr; Low</option>
+    <option value="score-asc">Avg Score: Low &rarr; High</option>
+    <option value="name-asc">Name: A &rarr; Z</option>
+    <option value="servers-desc">Most Servers</option>
+    <option value="stars-desc">Most Stars</option>
+  </select>
+  <span class="count-label" id="count-label"></span>
+</div>
+
+<div class="list" id="list"></div>
+
+<div class="footer">
+  <a href="./">MCP Scorecard</a> &mdash; Trust scoring for the MCP ecosystem
+</div>
+
+<script>
+const FLAG_SEV = {
+  'DEAD_ENTRY':'critical','NO_SOURCE':'critical','SENSITIVE_CRED_REQUEST':'critical',
+  'HIGH_SECRET_DEMAND':'warning','STAGING_ARTIFACT':'warning','REPO_ARCHIVED':'warning',
+  'TEMPLATE_DESCRIPTION':'info','DESCRIPTION_DUPLICATE':'info',
+};
+
+function scoreClass(s) {
+  if (s >= 80) return 'high';
+  if (s >= 60) return 'mod';
+  if (s >= 40) return 'low';
+  if (s >= 20) return 'vlow';
+  return 'unk';
+}
+
+function fmtNum(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+  return String(n);
+}
+
+let allPubs = [];
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const sort = document.getElementById('sort').value;
+
+  let filtered = allPubs.filter(p => !q || p.ns.toLowerCase().includes(q));
+
+  if (sort === 'score-desc') filtered.sort((a, b) => b.avgScore - a.avgScore);
+  else if (sort === 'score-asc') filtered.sort((a, b) => a.avgScore - b.avgScore);
+  else if (sort === 'name-asc') filtered.sort((a, b) => a.ns.localeCompare(b.ns));
+  else if (sort === 'servers-desc') filtered.sort((a, b) => b.count - a.count || b.avgScore - a.avgScore);
+  else if (sort === 'stars-desc') filtered.sort((a, b) => b.totalStars - a.totalStars);
+
+  const verifiedSvg = `<span class="verified-badge" title="Verified Publisher"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 1l3.09 2.26L19 4l.74 3.91L22 12l-2.26 4.09L19 20l-3.91.74L12 23l-4.09-2.26L4 20l-.74-3.91L2 12l2.26-4.09L4 4l3.91-.74L12 1z" fill="#58a6ff"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+
+  document.getElementById('list').innerHTML = filtered.map(p => {
+    const cls = scoreClass(p.avgScore);
+    const topFlags = Object.entries(p.flags)
+      .filter(([f]) => FLAG_SEV[f] === 'critical' || FLAG_SEV[f] === 'warning')
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([f, c]) => `<span class="pub-flag pub-flag-${FLAG_SEV[f]}">${c}</span>`)
+      .join('');
+
+    return `<a class="pub-row" href="publisher.html#${p.ns}">
+      <span class="pub-chevron">&#9654;</span>
+      <span class="score-pill score-${cls}">${p.avgScore}</span>
+      <span class="pub-name">${p.ns}${p.verified ? verifiedSvg : ''}</span>
+      <span class="pub-flags">${topFlags}</span>
+      <span class="pub-servers"><span class="val">${p.count}</span> server${p.count !== 1 ? 's' : ''}</span>
+      <span class="pub-meta">
+        ${p.totalStars > 0 ? `<span>&#9733; <span class="val">${fmtNum(p.totalStars)}</span></span>` : ''}
+      </span>
+    </a>`;
+  }).join('');
+
+  document.getElementById('count-label').textContent = `${filtered.length} of ${allPubs.length} publishers`;
+}
+
+async function init() {
+  const resp = await fetch('./output/index.json');
+  const data = await resp.json();
+
+  // Group by namespace
+  const nsMap = {};
+  for (const [name, s] of Object.entries(data.servers)) {
+    const ns = name.split('/')[0];
+    if (!nsMap[ns]) nsMap[ns] = { ns, servers: [], verified: false, flags: {} };
+    nsMap[ns].servers.push(s);
+    if (s.verified_publisher) nsMap[ns].verified = true;
+    for (const f of s.flags) nsMap[ns].flags[f] = (nsMap[ns].flags[f] || 0) + 1;
+  }
+
+  // Compute aggregates
+  allPubs = Object.values(nsMap).map(p => {
+    const scores = p.servers.map(s => s.trust_score);
+    const stars = p.servers.reduce((sum, s) => sum + (s.badges?.popularity?.stars || 0), 0);
+    return {
+      ns: p.ns,
+      count: p.servers.length,
+      avgScore: Math.round(scores.reduce((a, b) => a + b, 0) / scores.length),
+      totalStars: stars,
+      verified: p.verified,
+      flags: p.flags,
+    };
+  });
+
+  // Default sort: score desc
+  allPubs.sort((a, b) => b.avgScore - a.avgScore);
+
+  document.getElementById('search').addEventListener('input', render);
+  document.getElementById('sort').addEventListener('change', render);
+  render();
+}
+
+init();
+</script>
+</body>
+</html>

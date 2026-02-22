@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publisher — MCP Scorecard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #e6edf3; }
+
+  /* Header */
+  .header { padding: 24px 32px; border-bottom: 1px solid #21262d; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .header h1 { font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .header h1 a { color: #e6edf3; text-decoration: none; }
+  .header h1 a:hover { color: #58a6ff; }
+  .header .nav { display: flex; gap: 16px; font-size: 13px; }
+  .header .nav a { color: #7d8590; text-decoration: none; }
+  .header .nav a:hover { color: #58a6ff; }
+
+  /* Publisher hero */
+  .pub-hero { padding: 32px 32px 24px; border-bottom: 1px solid #21262d; }
+  .pub-name { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .pub-name h2 { font-size: 24px; font-weight: 700; }
+  .pub-name .verified-badge { display: inline-flex; align-items: center; }
+  .pub-name .verified-label { font-size: 12px; color: #58a6ff; font-weight: 600; }
+  .pub-links { display: flex; gap: 16px; font-size: 13px; }
+  .pub-links a { color: #58a6ff; text-decoration: none; }
+  .pub-links a:hover { text-decoration: underline; }
+
+  /* Stats bar */
+  .stats-bar { padding: 16px 32px; border-bottom: 1px solid #21262d; display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+  .stat { text-align: center; }
+  .stat-sep { width: 1px; height: 36px; background: #30363d; flex-shrink: 0; }
+  .stat .num { font-size: 22px; font-weight: 700; }
+  .stat .label { font-size: 11px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; }
+  .band-high .num { color: #3fb950; }
+  .band-mod .num { color: #58a6ff; }
+  .band-low .num { color: #d29922; }
+  .band-vlow .num { color: #f85149; }
+  .band-unk .num { color: #6e7681; }
+
+  /* Flag summary */
+  .flag-summary { padding: 12px 32px; border-bottom: 1px solid #21262d; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .flag-summary-label { font-size: 11px; color: #7d8590; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 8px; }
+
+  /* List */
+  .list { display: flex; flex-direction: column; }
+
+  /* Condensed row */
+  .row { display: flex; align-items: center; gap: 12px; padding: 8px 32px; border-bottom: 1px solid #21262d; cursor: pointer; }
+  .row:hover { background: #161b22; }
+  .row.expanded { background: #161b22; border-bottom-color: transparent; }
+  .row-name { font-size: 13px; font-weight: 600; color: #e6edf3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; display: flex; align-items: center; gap: 5px; }
+  .row-link { color: #58a6ff; text-decoration: none; flex-shrink: 0; font-size: 12px; line-height: 1; opacity: 0.7; }
+  .row-link:hover { opacity: 1; }
+  .verified-badge { flex-shrink: 0; display: inline-flex; align-items: center; }
+
+  /* Score pill */
+  .score-pill { padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; flex-shrink: 0; min-width: 32px; text-align: center; }
+  .score-high { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .score-mod { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .score-low { background: rgba(210,153,34,0.15); color: #d29922; }
+  .score-vlow { background: rgba(248,81,73,0.15); color: #f85149; }
+  .score-unk { background: rgba(110,118,129,0.15); color: #6e7681; }
+
+  /* Flags */
+  .row-flags { display: flex; gap: 4px; flex-shrink: 0; }
+  .row-flag { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+  .row-flag-critical { background: rgba(248,81,73,0.18); color: #f85149; }
+  .row-flag-warning { background: rgba(210,153,34,0.18); color: #d29922; }
+  .row-flag-info { background: rgba(110,118,129,0.12); color: #7d8590; }
+
+  /* Targets */
+  .row-targets { display: flex; gap: 3px; flex-shrink: 0; margin-left: auto; }
+  .row-target { font-size: 10px; padding: 1px 5px; border-radius: 3px; background: rgba(88,166,255,0.08); color: #58a6ff; white-space: nowrap; }
+
+  /* Popularity */
+  .row-pop { display: flex; gap: 10px; font-size: 11px; color: #7d8590; flex-shrink: 0; }
+  .row-pop span { display: flex; align-items: center; gap: 2px; }
+  .row-pop .val { color: #8b949e; font-weight: 600; }
+
+  /* Chevron */
+  .row-chevron { color: #484f58; font-size: 10px; flex-shrink: 0; transition: transform 0.15s; }
+  .row.expanded .row-chevron { transform: rotate(90deg); }
+
+  /* Detail panel */
+  .detail { display: none; padding: 12px 32px 16px 76px; background: #161b22; border-bottom: 1px solid #21262d; }
+  .detail.open { display: flex; flex-direction: column; gap: 10px; }
+
+  /* Badge groups */
+  .badge-group { display: flex; flex-direction: column; gap: 4px; }
+  .badge-group-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #484f58; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 3px; }
+
+  .badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 3px; line-height: 1.4; white-space: nowrap; }
+  .badge-flag-critical { background: rgba(248,81,73,0.18); color: #f85149; font-weight: 700; }
+  .badge-flag-warning { background: rgba(210,153,34,0.18); color: #d29922; font-weight: 600; }
+  .badge-flag-info { background: rgba(110,118,129,0.15); color: #7d8590; }
+  .badge-bool-true { background: rgba(63,185,80,0.12); color: #3fb950; }
+  .badge-bool-false { background: rgba(110,118,129,0.08); color: #393e46; }
+  .badge-enum-good { background: rgba(63,185,80,0.12); color: #3fb950; }
+  .badge-enum-neutral { background: rgba(136,146,158,0.12); color: #8b949e; }
+  .badge-enum-warning { background: rgba(210,153,34,0.15); color: #d29922; }
+  .badge-enum-critical { background: rgba(248,81,73,0.15); color: #f85149; }
+  .badge-enum-new { background: rgba(163,113,247,0.15); color: #a371f7; }
+
+  .detail-pop { display: flex; gap: 14px; font-size: 11px; color: #7d8590; }
+  .detail-pop span { display: flex; align-items: center; gap: 3px; }
+  .detail-pop .val { color: #e6edf3; font-weight: 600; }
+
+  /* Empty state */
+  .empty { padding: 64px 32px; text-align: center; color: #484f58; font-size: 16px; }
+  .empty a { color: #58a6ff; text-decoration: none; }
+  .empty a:hover { text-decoration: underline; }
+
+  /* Footer */
+  .footer { padding: 24px 32px; border-top: 1px solid #21262d; text-align: center; font-size: 12px; color: #484f58; margin-top: auto; }
+  .footer a { color: #58a6ff; text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><a href="./">MCP Scorecard</a></h1>
+  <div class="nav">
+    <a href="./">All Servers</a>
+    <a href="publishers.html">Publishers</a>
+    <a href="about.html">About</a>
+    <a href="https://github.com/gigabrainobserver/mcp-scorecard">GitHub</a>
+  </div>
+</div>
+
+<div id="pub-hero" class="pub-hero" style="display:none"></div>
+<div id="stats-bar" class="stats-bar" style="display:none"></div>
+<div id="flag-summary" class="flag-summary" style="display:none"></div>
+<div id="list" class="list"></div>
+<div id="empty" class="empty" style="display:none"></div>
+
+<div class="footer">
+  <a href="./">MCP Scorecard</a> &mdash; Trust scoring for the MCP ecosystem
+</div>
+
+<script>
+const FLAG_SEV = {
+  'DEAD_ENTRY':'critical','NO_SOURCE':'critical','SENSITIVE_CRED_REQUEST':'critical',
+  'HIGH_SECRET_DEMAND':'warning','STAGING_ARTIFACT':'warning','REPO_ARCHIVED':'warning',
+  'TEMPLATE_DESCRIPTION':'info','DESCRIPTION_DUPLICATE':'info',
+};
+const FLAG_SHORT = {
+  'SENSITIVE_CRED_REQUEST':'Sensitive Creds','DEAD_ENTRY':'Dead Entry','NO_SOURCE':'No Source',
+  'HIGH_SECRET_DEMAND':'Many Secrets','REPO_ARCHIVED':'Archived','STAGING_ARTIFACT':'Staging',
+  'DESCRIPTION_DUPLICATE':'Dup Desc','TEMPLATE_DESCRIPTION':'Template',
+};
+
+function scoreClass(s) {
+  if (s >= 80) return 'high';
+  if (s >= 60) return 'mod';
+  if (s >= 40) return 'low';
+  if (s >= 20) return 'vlow';
+  return 'unk';
+}
+
+function fmtNum(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+  return String(n);
+}
+
+function renderBadge(b) {
+  if (b.type === 'flag') return `<span class="badge badge-flag-${b.severity}">${b.label}</span>`;
+  if (b.type === 'bool') return `<span class="badge ${b.value ? 'badge-bool-true' : 'badge-bool-false'}">${b.label}</span>`;
+  if (b.type === 'enum') return `<span class="badge badge-enum-${b.level}">${b.label}: ${b.value}</span>`;
+  return '';
+}
+
+function renderRow(name, s, idx) {
+  const cls = scoreClass(s.trust_score);
+  const id = name.split('/').slice(1).join('/');
+  const badges = s.badges || {};
+  const pop = badges.popularity || {};
+  const repoUrl = s.signals?.repo_url || null;
+  const linkIcon = repoUrl
+    ? `<a class="row-link" href="${repoUrl}" target="_blank" rel="noopener" title="${repoUrl}" onclick="event.stopPropagation()"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"/></svg></a>`
+    : '';
+
+  const rowFlags = s.flags
+    .map(f => `<span class="row-flag row-flag-${FLAG_SEV[f] || 'info'}">${FLAG_SHORT[f] || f}</span>`)
+    .join('');
+
+  const rowTargets = (s.targets || [])
+    .map(t => `<span class="row-target">${t}</span>`)
+    .join('');
+
+  const popParts = [];
+  if (pop.stars > 0) popParts.push(`<span>&#9733; <span class="val">${fmtNum(pop.stars)}</span></span>`);
+  if (pop.forks > 0) popParts.push(`<span>&#9741; <span class="val">${fmtNum(pop.forks)}</span></span>`);
+  if (pop.watchers > 0) popParts.push(`<span>&#9737; <span class="val">${fmtNum(pop.watchers)}</span></span>`);
+
+  const secBadges = (badges.security || []).map(renderBadge).join('');
+  const provBadges = (badges.provenance || []).map(renderBadge).join('');
+  const actBadges = (badges.activity || []).map(renderBadge).join('');
+
+  const detailPop = (pop.stars > 0 || pop.forks > 0)
+    ? `<div class="detail-pop">
+        ${pop.stars > 0 ? `<span>&#9733; <span class="val">${fmtNum(pop.stars)}</span> stars</span>` : ''}
+        ${pop.forks > 0 ? `<span>&#9741; <span class="val">${fmtNum(pop.forks)}</span> forks</span>` : ''}
+        ${pop.watchers > 0 ? `<span>&#9737; <span class="val">${fmtNum(pop.watchers)}</span> watchers</span>` : ''}
+      </div>` : '';
+
+  return `<div class="row" data-idx="${idx}" onclick="toggleDetail(${idx})">
+      <span class="row-chevron">&#9654;</span>
+      <span class="score-pill score-${cls}">${s.trust_score}</span>
+      <span class="row-name">${linkIcon}${id}</span>
+      <span class="row-flags">${rowFlags}</span>
+      <span class="row-targets">${rowTargets}</span>
+      <span class="row-pop">${popParts.join('')}</span>
+    </div>
+    <div class="detail" id="detail-${idx}">
+      <div class="badge-group"><span class="badge-group-label">Security</span><div class="badge-row">${secBadges}</div></div>
+      <div class="badge-group"><span class="badge-group-label">Provenance</span><div class="badge-row">${provBadges}</div></div>
+      <div class="badge-group"><span class="badge-group-label">Activity</span><div class="badge-row">${actBadges}</div></div>
+      ${detailPop}
+    </div>`;
+}
+
+function toggleDetail(idx) {
+  const row = document.querySelector(`.row[data-idx="${idx}"]`);
+  const detail = document.getElementById('detail-' + idx);
+  const wasOpen = detail.classList.contains('open');
+  document.querySelectorAll('.detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!wasOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+async function init() {
+  const ns = decodeURIComponent(window.location.hash.slice(1));
+  if (!ns) {
+    document.getElementById('empty').style.display = '';
+    document.getElementById('empty').innerHTML = 'No publisher specified. <a href="./">Browse all servers</a>';
+    return;
+  }
+
+  document.title = `${ns} — MCP Scorecard`;
+
+  const resp = await fetch('./output/index.json');
+  const data = await resp.json();
+
+  // Filter servers for this namespace
+  const servers = Object.entries(data.servers)
+    .filter(([name]) => name.startsWith(ns + '/'))
+    .sort((a, b) => b[1].trust_score - a[1].trust_score);
+
+  if (!servers.length) {
+    document.getElementById('empty').style.display = '';
+    document.getElementById('empty').innerHTML = `No servers found for <strong>${ns}</strong>. <a href="./">Browse all servers</a>`;
+    return;
+  }
+
+  // Derive GitHub org link from first server with a repo
+  let orgUrl = null;
+  for (const [, s] of servers) {
+    const url = s.signals?.repo_url;
+    if (url && url.includes('github.com/')) {
+      const owner = url.replace('https://github.com/', '').split('/')[0];
+      if (owner) { orgUrl = 'https://github.com/' + owner; break; }
+    }
+  }
+
+  const isVerified = servers.some(([, s]) => s.verified_publisher);
+
+  // Publisher hero
+  const verifiedHTML = isVerified
+    ? `<span class="verified-badge" title="Verified Publisher"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 1l3.09 2.26L19 4l.74 3.91L22 12l-2.26 4.09L19 20l-3.91.74L12 23l-4.09-2.26L4 20l-.74-3.91L2 12l2.26-4.09L4 4l3.91-.74L12 1z" fill="#58a6ff"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="verified-label">Verified Publisher</span>`
+    : '';
+
+  const linksHTML = [
+    orgUrl ? `<a href="${orgUrl}" target="_blank" rel="noopener">GitHub</a>` : '',
+    `<a href="./#" onclick="window.location.href='./?q=${encodeURIComponent(ns)}'; return false;">View in main listing</a>`,
+  ].filter(Boolean).join('');
+
+  document.getElementById('pub-hero').style.display = '';
+  document.getElementById('pub-hero').innerHTML = `
+    <div class="pub-name"><h2>${ns}</h2>${verifiedHTML}</div>
+    <div class="pub-links">${linksHTML}</div>
+  `;
+
+  // Stats
+  const bands = { high: 0, mod: 0, low: 0, vlow: 0, unk: 0 };
+  const flagCounts = {};
+  let totalScore = 0, totalStars = 0;
+  for (const [, s] of servers) {
+    bands[scoreClass(s.trust_score)]++;
+    totalScore += s.trust_score;
+    totalStars += (s.badges?.popularity?.stars || 0);
+    for (const f of s.flags) flagCounts[f] = (flagCounts[f] || 0) + 1;
+  }
+  const avgScore = Math.round(totalScore / servers.length);
+
+  document.getElementById('stats-bar').style.display = '';
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat"><div class="num">${servers.length}</div><div class="label">Servers</div></div>
+    <div class="stat"><div class="num" style="color:${scoreClass(avgScore) === 'high' ? '#3fb950' : scoreClass(avgScore) === 'mod' ? '#58a6ff' : '#d29922'}">${avgScore}</div><div class="label">Avg Score</div></div>
+    <div class="stat"><div class="num" style="color:#e6edf3">${fmtNum(totalStars)}</div><div class="label">Total Stars</div></div>
+    <div class="stat-sep"></div>
+    ${bands.high ? `<div class="stat band-high"><div class="num">${bands.high}</div><div class="label">High</div></div>` : ''}
+    ${bands.mod ? `<div class="stat band-mod"><div class="num">${bands.mod}</div><div class="label">Moderate</div></div>` : ''}
+    ${bands.low ? `<div class="stat band-low"><div class="num">${bands.low}</div><div class="label">Low</div></div>` : ''}
+    ${bands.vlow ? `<div class="stat band-vlow"><div class="num">${bands.vlow}</div><div class="label">Very Low</div></div>` : ''}
+    ${bands.unk ? `<div class="stat band-unk"><div class="num">${bands.unk}</div><div class="label">Suspicious</div></div>` : ''}
+  `;
+
+  // Flag summary
+  const flagEntries = Object.entries(flagCounts).sort((a, b) => b[1] - a[1]);
+  if (flagEntries.length) {
+    document.getElementById('flag-summary').style.display = '';
+    document.getElementById('flag-summary').innerHTML = `
+      <span class="flag-summary-label">Flags</span>
+      ${flagEntries.map(([f, c]) =>
+        `<span class="row-flag row-flag-${FLAG_SEV[f] || 'info'}">${FLAG_SHORT[f] || f} (${c})</span>`
+      ).join('')}
+    `;
+  }
+
+  // Server list
+  document.getElementById('list').innerHTML = servers.map(([n, s], i) => renderRow(n, s, i)).join('');
+}
+
+window.addEventListener('hashchange', () => location.reload());
+init();
+</script>
+</body>
+</html>

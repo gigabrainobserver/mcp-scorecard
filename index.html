@@ -127,7 +127,8 @@
   .row:hover { background: #161b22; }
   .row.expanded { background: #161b22; border-bottom-color: transparent; }
   .row-name { font-size: 13px; font-weight: 600; color: #e6edf3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; display: flex; align-items: center; gap: 5px; }
-  .row-name .ns { color: #7d8590; font-weight: 400; }
+  .row-name .ns { color: #7d8590; font-weight: 400; text-decoration: none; }
+  .row-name .ns:hover { color: #58a6ff; text-decoration: underline; }
   .row-link { color: #58a6ff; text-decoration: none; flex-shrink: 0; font-size: 12px; line-height: 1; opacity: 0.7; }
   .row-link:hover { opacity: 1; }
   .verified-badge { flex-shrink: 0; display: inline-flex; align-items: center; }
@@ -213,6 +214,7 @@
 <div class="header">
   <h1><a href="./">MCP Scorecard</a></h1>
   <div class="nav">
+    <a href="publishers.html">Publishers</a>
     <a href="about.html">About</a>
     <a href="https://github.com/gigabrainobserver/mcp-scorecard">GitHub</a>
   </div>
@@ -336,7 +338,7 @@ function renderRow(name, s, idx) {
   return `<div class="row" data-idx="${idx}" onclick="toggleDetail(${idx})">
       <span class="row-chevron">&#9654;</span>
       <span class="score-pill score-${cls}">${s.trust_score}</span>
-      <span class="row-name">${linkIcon}<span class="ns">${ns}/</span>${id}${verifiedIcon}</span>
+      <span class="row-name">${linkIcon}<a class="ns" href="publisher.html#${ns}" onclick="event.stopPropagation()">${ns}/</a>${id}${verifiedIcon}</span>
       <span class="row-flags">${rowFlags}</span>
       <span class="row-targets">${rowTargets}</span>
       <span class="row-pop">${popParts.join('')}</span>
