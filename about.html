@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MCP Scorecard — Trust Scoring for MCP Servers</title>
+<title>MCP Scorecard — Mission &amp; Methodology</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.6; }
@@ -14,9 +14,10 @@
 
   /* Hero */
   .hero { padding: 80px 0 48px; text-align: center; }
-  .hero h1 { font-size: 40px; font-weight: 700; margin-bottom: 12px; }
+  .hero h1 { font-size: 40px; font-weight: 700; margin-bottom: 16px; }
   .hero h1 span { color: #58a6ff; }
-  .hero .tagline { font-size: 18px; color: #7d8590; max-width: 560px; margin: 0 auto 32px; }
+  .hero .tagline { font-size: 20px; color: #7d8590; max-width: 600px; margin: 0 auto 12px; }
+  .hero .sub { font-size: 15px; color: #484f58; max-width: 500px; margin: 0 auto 36px; }
   .hero .cta { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
   .btn { padding: 10px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block; }
   .btn-primary { background: #58a6ff; color: #0d1117; }
@@ -24,18 +25,44 @@
   .btn-secondary { background: #21262d; color: #e6edf3; border: 1px solid #30363d; }
   .btn-secondary:hover { background: #30363d; text-decoration: none; }
 
-  /* Stats banner */
-  .stats-banner { border-top: 1px solid #21262d; border-bottom: 1px solid #21262d; padding: 24px 0; margin-bottom: 48px; }
-  .stats-row { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-  .stat { text-align: center; }
-  .stat .num { font-size: 28px; font-weight: 700; color: #58a6ff; }
-  .stat .label { font-size: 12px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; }
+  /* Scale banner */
+  .scale-banner { border-top: 1px solid #21262d; border-bottom: 1px solid #21262d; padding: 28px 0; margin-bottom: 56px; }
+  .scale-row { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+  .scale-item { text-align: center; }
+  .scale-item .num { font-size: 32px; font-weight: 700; color: #58a6ff; }
+  .scale-item .label { font-size: 12px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; }
 
   /* Sections */
   section { margin-bottom: 56px; }
   section h2 { font-size: 24px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #21262d; }
   section h3 { font-size: 16px; font-weight: 600; margin: 20px 0 8px; }
-  section p { color: #b1bac4; margin-bottom: 12px; }
+  section p { color: #b1bac4; margin-bottom: 14px; font-size: 15px; }
+  section p strong { color: #e6edf3; }
+
+  /* Manifesto callout */
+  .manifesto { background: #161b22; border: 1px solid #21262d; border-radius: 12px; padding: 32px; margin: 32px 0; text-align: center; }
+  .manifesto p { font-size: 20px; color: #e6edf3; font-weight: 600; line-height: 1.5; margin: 0; }
+  .manifesto p span { color: #58a6ff; }
+
+  /* Principles */
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }
+  .principle { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 20px; }
+  .principle h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; color: #e6edf3; }
+  .principle p { font-size: 13px; color: #7d8590; margin: 0; }
+
+  /* Quote */
+  blockquote { border-left: 3px solid #58a6ff; padding: 12px 20px; margin: 20px 0; background: rgba(88,166,255,0.04); border-radius: 0 8px 8px 0; }
+  blockquote p { color: #b1bac4; margin: 0; font-style: italic; font-size: 15px; }
+
+  /* Timeline */
+  .timeline { margin: 20px 0; }
+  .timeline-item { display: flex; gap: 16px; margin-bottom: 20px; }
+  .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: #58a6ff; margin-top: 6px; flex-shrink: 0; }
+  .timeline-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .timeline-content p { font-size: 13px; color: #7d8590; margin: 0; }
+
+  /* Divider */
+  .section-divider { border: none; border-top: 2px solid #21262d; margin: 64px 0; }
 
   /* Category grid */
   .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 20px 0; }
@@ -67,12 +94,6 @@
   .flags-table .flag-name { font-weight: 600; color: #f85149; font-family: monospace; font-size: 13px; }
   .flags-table .flag-count { color: #7d8590; font-size: 13px; }
 
-  /* Principles */
-  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 16px 0; }
-  .principle { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; }
-  .principle h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-  .principle p { font-size: 13px; color: #7d8590; margin: 0; }
-
   /* API */
   .endpoint { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; margin: 12px 0; font-family: monospace; }
   .endpoint .method { color: #3fb950; font-weight: 700; }
@@ -88,30 +109,126 @@
 
 <div class="container">
 
+  <!-- ==================== MISSION ==================== -->
+
   <div class="hero">
-    <h1>MCP <span>Scorecard</span></h1>
-    <p class="tagline">Independent trust scoring for MCP servers. Transparent methodology, no opinions — just data from the MCP registry and GitHub.</p>
+    <h1>Trust Signals for <span>Every</span> MCP Server</h1>
+    <p class="tagline">The MCP ecosystem has no rules. We think you deserve to know what you're installing.</p>
+    <p class="sub">Open source. Non-profit. Forever free.</p>
     <div class="cta">
-      <a href="./" class="btn btn-primary">Browse All Servers</a>
+      <a href="./" class="btn btn-primary">Browse the Scorecard</a>
       <a href="publishers.html" class="btn btn-secondary">Publishers</a>
       <a href="https://github.com/gigabrainobserver/mcp-scorecard" class="btn btn-secondary">View Source</a>
     </div>
   </div>
 
-  <div class="stats-banner">
-    <div class="stats-row" id="stats-row">
-      <div class="stat"><div class="num" id="s-total">—</div><div class="label">Servers Scored</div></div>
-      <div class="stat"><div class="num" id="s-high">—</div><div class="label">High Trust</div></div>
-      <div class="stat"><div class="num" id="s-flagged">—</div><div class="label">Flagged</div></div>
-      <div class="stat"><div class="num" id="s-updated">—</div><div class="label">Last Updated</div></div>
+  <div class="scale-banner">
+    <div class="scale-row">
+      <div class="scale-item"><div class="num" id="s-servers">2,300+</div><div class="label">Servers Scored</div></div>
+      <div class="scale-item"><div class="num" id="s-publishers">1,600+</div><div class="label">Publishers</div></div>
+      <div class="scale-item"><div class="num" id="s-flags">800+</div><div class="label">Flags Raised</div></div>
+      <div class="scale-item"><div class="num">$0</div><div class="label">Cost to Use</div></div>
     </div>
   </div>
 
   <section>
-    <h2>Why This Exists</h2>
-    <p>The <a href="https://registry.modelcontextprotocol.io">MCP registry</a> has thousands of servers with zero trust signals. No download counts, no verification, no quality scoring. Agents are increasingly auto-selecting MCP servers and handing them credentials with no way to evaluate trustworthiness.</p>
-    <p>MCP Scorecard is a batch-processed trust scoring index that aggregates publicly available signals from the MCP registry and GitHub. It scores every server and publishes the results as static JSON that anyone — human or agent — can consume.</p>
+    <h2>The Problem</h2>
+    <p>AI agents are gaining the ability to install and use software on your behalf. The Model Context Protocol (MCP) is becoming the standard way they do it — connecting to servers that access your files, your databases, your credentials, your cloud accounts.</p>
+    <p>The MCP registry now lists thousands of servers. <strong>There is no review process.</strong> No verification. No download counts. No trust signals of any kind. Anyone can publish a server that requests your AWS keys, your database password, or your wallet credentials — and nothing in the ecosystem will warn you.</p>
+    <p>Agents are increasingly auto-selecting MCP servers and handing them credentials with no way to evaluate whether that server is maintained, legitimate, or safe. The registry is a flat list with no quality signal.</p>
+    <p><strong>This is the wild west, and the land rush is on.</strong></p>
   </section>
+
+  <div class="manifesto">
+    <p>You decide which servers to trust.<br>We make sure you have <span>the data to decide</span>.</p>
+  </div>
+
+  <section>
+    <h2>What We Do</h2>
+    <p>MCP Scorecard scores every server in the MCP registry using publicly available data. We check the source code, the GitHub repo, the package metadata, the credentials it requests, and the people behind it. We publish everything as open data — free for humans and machines alike.</p>
+    <p>We don't curate. We don't block. We don't sell rankings. We surface facts and let you draw your own conclusions.</p>
+    <p>Every signal, every weight, every threshold is in the <a href="https://github.com/gigabrainobserver/mcp-scorecard">open source code</a>. If you disagree with how we score something, you can see exactly why — and you can fork it.</p>
+  </section>
+
+  <section>
+    <h2>Our Commitments</h2>
+    <div class="principles">
+      <div class="principle">
+        <h4>Free Forever</h4>
+        <p>No paid tiers. No premium features. No "contact sales for enterprise." The full dataset is free for everyone, always.</p>
+      </div>
+      <div class="principle">
+        <h4>Open Source</h4>
+        <p>The entire scoring pipeline — collection, enrichment, scoring, publishing — is open source under MIT. Audit it, fork it, improve it.</p>
+      </div>
+      <div class="principle">
+        <h4>No Ads, No Tracking</h4>
+        <p>No analytics. No cookies. No fingerprinting. The site is static HTML served from GitHub Pages. We don't know who you are and we don't want to.</p>
+      </div>
+      <div class="principle">
+        <h4>Facts, Not Opinions</h4>
+        <p>Flags are observable data from public sources. We don't maintain blocklists. We don't do manual reviews. We don't accept payment to change a score.</p>
+      </div>
+      <div class="principle">
+        <h4>Machine-Readable</h4>
+        <p>Every score is available as static JSON. MCP clients and AI agents can check trust signals programmatically before granting access.</p>
+      </div>
+      <div class="principle">
+        <h4>Independent</h4>
+        <p>Not affiliated with any MCP server vendor, registry, or marketplace. No commercial interest in any ranking. We exist to inform, not to sell.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Why This Matters Now</h2>
+    <p>We're at an inflection point. AI agents are moving from "suggest code" to "execute code." From "draft an email" to "manage your infrastructure." MCP is the protocol that makes this possible — and the trust infrastructure hasn't caught up.</p>
+    <p>Right now, an agent can select an MCP server from the registry, request your database credentials, and execute operations on your behalf. The only thing standing between your data and an unmaintained, unverified server is... nothing. There is no gate.</p>
+
+    <blockquote>
+      <p>The time to build trust infrastructure is before the first major incident, not after.</p>
+    </blockquote>
+
+    <p>We're not trying to slow down the MCP ecosystem. We're trying to make sure it grows with visibility. Every server deserves a chance to prove itself — and every user deserves the information to make that call.</p>
+  </section>
+
+  <section>
+    <h2>Get Involved</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Use the data</h4>
+          <p>Check servers before installing them. Share the scorecard with your team. Build tools on top of our JSON output.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Improve the scoring</h4>
+          <p>Found a false positive? Think a signal is weighted wrong? Open an issue or submit a PR. The methodology is meant to evolve.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Spread the word</h4>
+          <p>The scorecard only works if people know it exists. Blog about it, tweet it, drop it in your team Slack. Every person informed is one fewer caught off guard.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Build trust infrastructure</h4>
+          <p>We're one project. The ecosystem needs more — package signing, server attestation, runtime sandboxing. If you're building in this space, let's talk.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== METHODOLOGY ==================== -->
+
+  <hr class="section-divider">
 
   <section>
     <h2>Scoring Model</h2>
@@ -169,7 +286,7 @@
     <p>Binary flags that indicate structural or behavioral anomalies, independent of the numeric score. These are observable facts, not opinions.</p>
     <table class="flags-table">
       <thead><tr><th>Flag</th><th>What it observes</th><th>Count</th></tr></thead>
-      <tbody id="flags-tbody">
+      <tbody>
         <tr><td class="flag-name">DEAD_ENTRY</td><td>No packages and no remotes — server can't be installed or reached</td><td class="flag-count" id="fc-DEAD_ENTRY">—</td></tr>
         <tr><td class="flag-name">TEMPLATE_DESCRIPTION</td><td>Description matches common boilerplate ("A model context protocol server")</td><td class="flag-count" id="fc-TEMPLATE_DESCRIPTION">—</td></tr>
         <tr><td class="flag-name">STAGING_ARTIFACT</td><td>Name contains test/staging patterns combined with a template description</td><td class="flag-count" id="fc-STAGING_ARTIFACT">—</td></tr>
@@ -183,47 +300,25 @@
   </section>
 
   <section>
-    <h2>Principles</h2>
-    <div class="principles">
-      <div class="principle">
-        <h4>Transparent</h4>
-        <p>Every signal, weight, and threshold is public. The full scoring logic is open source. Anyone can audit, reproduce, or fork it.</p>
-      </div>
-      <div class="principle">
-        <h4>Objective</h4>
-        <p>No curated blocklists, no manual overrides, no pay-to-play. Flags are observable facts from public data, not opinions.</p>
-      </div>
-      <div class="principle">
-        <h4>Independent</h4>
-        <p>Not a marketplace, not selling MCP servers, no commercial interest in rankings. The index exists to inform, not to sell.</p>
-      </div>
-      <div class="principle">
-        <h4>Machine-Readable</h4>
-        <p>Static JSON output designed for agent consumption. Any MCP client can check trust scores before granting credentials.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
     <h2>Data Access</h2>
     <p>All data is freely available as static JSON. No API key required.</p>
     <div class="endpoint">
-      <span class="method">GET</span> <span class="url" id="url-index">output/index.json</span>
+      <span class="method">GET</span> <span class="url">output/index.json</span>
       <div class="desc">Per-server scores, signals, and flags for every server in the registry</div>
     </div>
     <div class="endpoint">
-      <span class="method">GET</span> <span class="url" id="url-stats">output/stats.json</span>
+      <span class="method">GET</span> <span class="url">output/stats.json</span>
       <div class="desc">Ecosystem summary — score distribution, flag counts, top servers</div>
     </div>
     <div class="endpoint">
-      <span class="method">GET</span> <span class="url" id="url-flags">output/flags.json</span>
+      <span class="method">GET</span> <span class="url">output/flags.json</span>
       <div class="desc">Servers grouped by flag type for quick lookup</div>
     </div>
   </section>
 
   <section>
     <h2>How It Works</h2>
-    <p>The pipeline runs on-demand. Four stages, ~70 minutes, all free public APIs.</p>
+    <p>The pipeline runs on-demand. Four stages, all free public APIs.</p>
     <div class="endpoint" style="font-size:13px; line-height:1.8;">
       <span style="color:#3fb950;">COLLECT</span> Registry API → 2,300+ servers<br>
       <span style="color:#58a6ff;">ENRICH</span>&nbsp; GitHub API → repo metadata, community profile, commit activity<br>
@@ -236,8 +331,9 @@
 
 <footer>
   <div class="container">
-    <a href="https://github.com/gigabrainobserver/mcp-scorecard">GitHub</a> &nbsp;·&nbsp;
     <a href="./">Browse Servers</a> &nbsp;·&nbsp;
+    <a href="publishers.html">Publishers</a> &nbsp;·&nbsp;
+    <a href="https://github.com/gigabrainobserver/mcp-scorecard">GitHub</a> &nbsp;·&nbsp;
     Built by <a href="https://github.com/gigabrainobserver">gigabrainobserver</a>
   </div>
 </footer>
@@ -247,21 +343,20 @@ async function loadStats() {
   try {
     const resp = await fetch('./output/stats.json');
     const s = await resp.json();
-    document.getElementById('s-total').textContent = s.server_count.toLocaleString();
-    const high = s.score_distribution.find(d => d.label === 'High Trust');
-    document.getElementById('s-high').textContent = high ? high.count : 0;
+    document.getElementById('s-servers').textContent = s.server_count.toLocaleString();
     const flagged = Object.values(s.flag_summary).reduce((a, b) => a + b, 0);
-    document.getElementById('s-flagged').textContent = Object.keys(s.flag_summary).length + ' types';
-    const d = new Date(s.generated_at);
-    document.getElementById('s-updated').textContent = d.toLocaleDateString();
+    document.getElementById('s-flags').textContent = flagged.toLocaleString();
 
     for (const [flag, count] of Object.entries(s.flag_summary)) {
       const el = document.getElementById('fc-' + flag);
       if (el) el.textContent = count;
     }
-  } catch (e) {
-    console.error('Failed to load stats:', e);
-  }
+
+    const resp2 = await fetch('./output/index.json');
+    const data = await resp2.json();
+    const namespaces = new Set(Object.keys(data.servers).map(n => n.split('/')[0]));
+    document.getElementById('s-publishers').textContent = namespaces.size.toLocaleString();
+  } catch (e) {}
 }
 loadStats();
 </script>
