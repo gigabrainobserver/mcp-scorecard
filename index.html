@@ -321,7 +321,7 @@ function renderRow(name, s, idx) {
     : '';
 
   const verifiedIcon = s.verified_publisher
-    ? `<span class="verified-badge" title="Verified Publisher"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 1l3.09 2.26L19 4l.74 3.91L22 12l-2.26 4.09L19 20l-3.91.74L12 23l-4.09-2.26L4 20l-.74-3.91L2 12l2.26-4.09L4 4l3.91-.74L12 1z" fill="#58a6ff"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`
+    ? `<span class="verified-badge" title="Verified Publisher"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#58a6ff"/><path d="M9 12l2 2 4-4" stroke="#0d1117" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>`
     : '';
 
   // Condensed row: flags (only critical/warning in condensed view)
@@ -361,7 +361,7 @@ function renderRow(name, s, idx) {
       <span class="row-targets">${rowTargets}</span>
       <span class="row-pop">${popParts.join('')}</span>
     </div>
-    <div class="detail" id="detail-${idx}">${s.verified_publisher ? `<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><span class="verified-badge" title="Verified Publisher"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 1l3.09 2.26L19 4l.74 3.91L22 12l-2.26 4.09L19 20l-3.91.74L12 23l-4.09-2.26L4 20l-.74-3.91L2 12l2.26-4.09L4 4l3.91-.74L12 1z" fill="#58a6ff"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="font-size:11px;color:#58a6ff;font-weight:600">Verified Publisher</span></div>` : ''}
+    <div class="detail" id="detail-${idx}">${s.verified_publisher ? `<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><span class="verified-badge" title="Verified Publisher"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#58a6ff"/><path d="M9 12l2 2 4-4" stroke="#0d1117" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span style="font-size:11px;color:#58a6ff;font-weight:600">Verified Publisher</span></div>` : ''}
       <div class="badge-group"><span class="badge-group-label">Security</span><div class="badge-row">${secBadges}</div></div>
       <div class="badge-group"><span class="badge-group-label">Provenance</span><div class="badge-row">${provBadges}</div></div>
       <div class="badge-group"><span class="badge-group-label">Activity</span><div class="badge-row">${actBadges}</div></div>
