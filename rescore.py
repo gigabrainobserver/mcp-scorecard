@@ -4,7 +4,11 @@ Usage: python rescore.py
 """
 
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent / "src"))
+from mcp_scorecard.config import VERIFIED_PUBLISHERS  # noqa: E402
 
 
 def generate_badges_from_signals(signals: dict, flags: list[str]) -> dict:
@@ -175,6 +179,8 @@ def main():
         server["badges"] = generate_badges_from_signals(
             server["signals"], server["flags"]
         )
+        ns = name.split("/")[0] if "/" in name else ""
+        server["verified_publisher"] = ns in VERIFIED_PUBLISHERS
 
     idx_path.write_text(json.dumps(data, indent=2))
     print(f"Added badges to {len(data['servers'])} servers in {idx_path}")

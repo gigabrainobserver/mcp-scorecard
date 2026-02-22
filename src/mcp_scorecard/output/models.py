@@ -35,6 +35,7 @@ class ServerScore(BaseModel):
     signals: dict[str, object]
     flags: list[str] = Field(default_factory=list)
     badges: BadgeGroups = Field(default_factory=BadgeGroups)
+    verified_publisher: bool = False
 
 
 class CategoryScores(BaseModel):

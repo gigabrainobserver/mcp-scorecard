@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from statistics import median
 
-from mcp_scorecard.config import OUTPUT_DIR, SCORE_BANDS
+from mcp_scorecard.config import OUTPUT_DIR, SCORE_BANDS, VERIFIED_PUBLISHERS
 from mcp_scorecard.output.models import (
     Badge,
     BadgeGroups,
@@ -57,6 +57,7 @@ def _build_index(
             activity=[Badge(**b) for b in raw_badges.get("activity", [])],
             popularity=PopularityMetrics(**raw_badges.get("popularity", {})),
         )
+        ns = name.split("/")[0] if "/" in name else ""
         servers[name] = ServerScore(
             trust_score=data["trust_score"],
             trust_label=data["trust_label"],
@@ -64,6 +65,7 @@ def _build_index(
             signals=data["signals"],
             flags=data["flags"],
             badges=badge_groups,
+            verified_publisher=ns in VERIFIED_PUBLISHERS,
         )
     return ScorecardIndex(
         generated_at=now,

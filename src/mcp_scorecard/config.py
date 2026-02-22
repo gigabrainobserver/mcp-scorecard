@@ -186,6 +186,21 @@ GITHUB_RATE_LIMIT_PER_HOUR = 5000  # authenticated
 GITHUB_RATE_LIMIT_BUFFER = 100     # stop this many before limit
 GITHUB_CONCURRENT_REQUESTS = 10
 
+# --- Verified Publishers (curated whitelist) ---
+# Namespace must match exactly. Dave curates manually.
+VERIFIED_PUBLISHERS: set[str] = {
+    "com.microsoft",
+    "io.github.apollographql",
+    "io.github.bytedance",
+    "io.github.firebase",
+    "io.github.github",
+    "io.github.googleapis",
+    "io.github.netdata",
+    "io.github.nrwl",
+    "io.github.safedep",
+    "io.github.upstash",
+}
+
 # --- Enrichment Cache ---
 GITHUB_CACHE_FILE = "data/github_cache.json"
 GITHUB_CACHE_MAX_AGE_DAYS = 7  # re-fetch servers older than this
