@@ -1,14 +1,19 @@
 """GitHub API enricher.
 
 Fetches repo metadata, community profile, and commit activity for each
-server that has a GitHub repo URL.
+server that has a GitHub repo URL. Results are cached to data/github_cache.json
+so that multiple runs can build up full coverage within rate limits.
 """
 
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 import re
+import time
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import TypedDict
 
 import httpx
@@ -237,13 +242,18 @@ class GitHubEnricher:
     # Public entry point
     # ------------------------------------------------------------------
 
-    async def run(self, servers: list[ServerEntry]) -> dict[str, GitHubData]:
-        """Enrich all servers that have a GitHub repo URL.
+    async def run(
+        self, servers: list[ServerEntry], cache: dict | None = None
+    ) -> dict[str, GitHubData]:
+        """Enrich servers that have a GitHub repo URL, skipping cached ones.
 
-        Returns a dict keyed by server name.
+        Returns a dict keyed by server name (only freshly fetched servers).
         """
-        # Build work list: (server_name, owner, repo)
+        cache = cache or {}
+
+        # Build work list, skipping fresh cache entries
         work: list[tuple[str, str, str]] = []
+        skipped = 0
         for srv in servers:
             url = srv.get("repo_url")
             if not url:
@@ -251,10 +261,17 @@ class GitHubEnricher:
             parsed = _parse_repo_url(url)
             if parsed is None:
                 continue
-            work.append((srv["name"], parsed[0], parsed[1]))
+            name = srv["name"]
+            if name in cache and not _is_stale(cache[name]):
+                skipped += 1
+                continue
+            work.append((name, parsed[0], parsed[1]))
+
+        if skipped:
+            print(f"Skipping {skipped} servers with fresh cache entries.")
 
         if not work:
-            print("No servers with GitHub repos to enrich.")
+            print("No servers need enrichment (all cached).")
             return {}
 
         remaining_str = "unknown"
@@ -372,8 +389,39 @@ def _estimate_contributors(
     return 2
 
 
+def _load_cache() -> dict:
+    """Load the GitHub enrichment cache from disk."""
+    path = Path(config.GITHUB_CACHE_FILE)
+    if not path.exists():
+        return {}
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def _save_cache(cache: dict) -> None:
+    """Write the GitHub enrichment cache to disk."""
+    path = Path(config.GITHUB_CACHE_FILE)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(cache, f, separators=(",", ":"))
+
+
+def _is_stale(entry: dict) -> bool:
+    """Check if a cache entry is older than the max age."""
+    cached_at = entry.get("_cached_at")
+    if cached_at is None:
+        return True
+    age_days = (time.time() - cached_at) / 86400
+    return age_days > config.GITHUB_CACHE_MAX_AGE_DAYS
+
+
 async def enrich(servers: list[ServerEntry]) -> dict[str, GitHubData]:
     """Main entry point for GitHub enrichment.
+
+    Loads cached data, fetches only new/stale servers, merges, saves cache.
 
     Args:
         servers: List of ServerEntry dicts from the registry collector.
@@ -381,5 +429,26 @@ async def enrich(servers: list[ServerEntry]) -> dict[str, GitHubData]:
     Returns:
         Dict keyed by server name with GitHubData values.
     """
+    cache = _load_cache()
+    cached_count = len(cache)
+
     enricher = GitHubEnricher()
-    return await enricher.run(servers)
+    fresh = await enricher.run(servers, cache)
+
+    # Merge fresh results into cache with timestamp
+    now = time.time()
+    for name, data in fresh.items():
+        cache[name] = {**data, "_cached_at": now}
+
+    _save_cache(cache)
+
+    # Return all cached data (strip internal _cached_at field)
+    results: dict[str, GitHubData] = {}
+    for name, entry in cache.items():
+        cleaned = {k: v for k, v in entry.items() if not k.startswith("_")}
+        results[name] = GitHubData(**cleaned)
+
+    new_count = len(cache) - cached_count
+    print(f"Cache: {new_count} new, {len(cache)} total ({cached_count} from previous runs)")
+
+    return results
