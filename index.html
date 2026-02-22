@@ -465,7 +465,7 @@ async function init() {
   const resp = await fetch('./output/index.json');
   const data = await resp.json();
 
-  document.getElementById('generated').textContent = `Generated: ${new Date(data.generated_at).toLocaleDateString()}`;
+  document.getElementById('generated').textContent = `Last Updated: ${new Date(data.generated_at).toLocaleDateString()}`;
   document.getElementById('version').textContent = `v${data.version}`;
 
   allServers = Object.entries(data.servers);
