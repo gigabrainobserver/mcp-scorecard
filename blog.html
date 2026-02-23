@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — MCP Scorecard</title>
+<meta name="description" content="Analysis and reporting on the MCP server ecosystem. New entries, trust signals, publisher investigations, and trends.">
+<meta property="og:title" content="Blog — MCP Scorecard">
+<meta property="og:description" content="Analysis and reporting on the MCP server ecosystem. New entries, trust signals, publisher investigations, and trends.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mcp-scorecard.gigabrain.observer/blog.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Blog — MCP Scorecard">
+<meta name="twitter:description" content="Analysis and reporting on the MCP server ecosystem.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #e6edf3; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  .header { padding: 24px 32px; border-bottom: 1px solid #21262d; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .header h1 { font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .header h1 a { color: #e6edf3; text-decoration: none; }
+  .header h1 a:hover { color: #58a6ff; text-decoration: none; }
+  .header .nav { display: flex; gap: 16px; font-size: 13px; }
+  .header .nav a { color: #7d8590; text-decoration: none; }
+  .header .nav a:hover { color: #58a6ff; text-decoration: none; }
+  .header .nav a.active { color: #e6edf3; font-weight: 600; }
+  .header .meta { font-size: 13px; color: #7d8590; display: flex; gap: 16px; margin-left: auto; align-items: center; }
+  .header .meta a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .layout { display: flex; max-width: 1000px; margin: 0 auto; padding: 0 24px; gap: 48px; }
+  .main { flex: 1; min-width: 0; padding: 48px 0; }
+  .sidebar { width: 220px; flex-shrink: 0; padding: 48px 0 48px 0; border-left: 1px solid #21262d; padding-left: 24px; }
+  .main h2 { font-size: 28px; font-weight: 700; margin-bottom: 32px; }
+
+  /* Sidebar sections */
+  .sb-section { margin-bottom: 28px; }
+  .sb-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #484f58; margin-bottom: 10px; }
+  .sb-item { display: block; font-size: 13px; color: #7d8590; padding: 3px 0; cursor: pointer; text-decoration: none; }
+  .sb-item:hover { color: #58a6ff; text-decoration: none; }
+  .sb-item.active { color: #e6edf3; font-weight: 600; }
+  .sb-count { float: right; color: #484f58; font-size: 12px; }
+  .sb-tag { display: inline-flex; align-items: center; gap: 6px; }
+  .sb-tag .tag { font-size: 10px; padding: 1px 6px; }
+  .sb-pub { font-family: monospace; font-size: 12px; }
+
+  /* Post cards */
+  .post-card { border-bottom: 1px solid #21262d; padding: 24px 0; }
+  .post-card:first-of-type { padding-top: 0; }
+  .post-card:last-of-type { border-bottom: none; }
+  .post-date { font-size: 12px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .post-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  .post-title a { color: #e6edf3; }
+  .post-title a:hover { color: #58a6ff; text-decoration: none; }
+  .post-summary { font-size: 15px; color: #7d8590; line-height: 1.5; }
+  .post-pubs { margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap; }
+  .post-pub { font-size: 10px; padding: 1px 6px; border-radius: 3px; background: rgba(88,166,255,0.08); color: #58a6ff; font-family: monospace; text-decoration: none; }
+  .post-pub:hover { background: rgba(88,166,255,0.18); text-decoration: none; }
+
+  /* Single post view */
+  .post-view { padding: 48px 0; }
+  .post-view .back { font-size: 13px; color: #7d8590; margin-bottom: 24px; display: inline-block; }
+  .post-view .back:hover { color: #58a6ff; }
+  .post-header { margin-bottom: 32px; }
+  .post-header .post-date { margin-bottom: 8px; }
+  .post-header h2 { font-size: 32px; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
+  .post-header .post-summary { font-size: 17px; color: #8b949e; }
+  .byline { font-size: 13px; color: #484f58; margin-top: 8px; }
+
+  /* Post body */
+  .post-body { line-height: 1.7; font-size: 16px; color: #b1bac4; }
+  .post-body h3 { font-size: 20px; font-weight: 600; color: #e6edf3; margin: 32px 0 12px; }
+  .post-body p { margin-bottom: 16px; }
+  .post-body strong { color: #e6edf3; }
+  .post-body code { background: #161b22; padding: 2px 6px; border-radius: 4px; font-size: 14px; color: #e6edf3; }
+  .post-body a { color: #58a6ff; }
+  .post-body ul, .post-body ol { margin: 0 0 16px 24px; }
+  .post-body li { margin-bottom: 6px; }
+  .post-body em { color: #8b949e; }
+  .post-body table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  .post-body th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #21262d; color: #7d8590; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .post-body td { padding: 8px 12px; border-bottom: 1px solid #21262d; }
+  .post-body .traceback { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; font-size: 13px; color: #7d8590; margin-top: 32px; }
+  .post-body .traceback strong { color: #8b949e; }
+  .post-body .traceback a { color: #58a6ff; }
+  .post-body blockquote { border-left: 3px solid #30363d; padding: 12px 20px; margin: 20px 0; background: rgba(88,166,255,0.04); border-radius: 0 8px 8px 0; }
+  .post-body blockquote p { color: #8b949e; margin: 0; font-style: italic; }
+  .post-body blockquote cite { display: block; margin-top: 8px; font-size: 13px; font-style: normal; color: #484f58; }
+
+  /* Tag pills */
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+  .tag-pulse { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .tag-spotlight { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .tag-trend { background: rgba(210,153,34,0.15); color: #d29922; }
+  .tag-investigation { background: rgba(248,81,73,0.15); color: #f85149; }
+  .tag-interview { background: rgba(163,113,247,0.15); color: #a371f7; }
+  .tag-comparison { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .tag-incident { background: rgba(248,81,73,0.15); color: #f85149; }
+
+  /* Footer */
+  .footer { padding: 32px 32px 24px; text-align: center; margin-top: 16px; }
+  .footer-squig { color: #21262d; font-size: 14px; letter-spacing: 4px; margin-bottom: 10px; }
+  .footer-text { font-size: 12px; color: #30363d; }
+  .footer-text a { color: #30363d; text-decoration: none; }
+  .footer-text a:hover { color: #58a6ff; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; gap: 0; }
+    .sidebar { width: 100%; border-left: none; border-top: 1px solid #21262d; padding-left: 0; padding-top: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><a href="./">MCP Scorecard</a></h1>
+  <div class="nav">
+    <a href="./">Servers</a>
+    <a href="publishers.html">Publishers</a>
+    <a href="platforms.html">Platforms</a>
+    <a href="blog.html" class="active">Blog</a>
+  </div>
+  <div class="meta">
+    <a href="about.html" style="color:#58a6ff;font-weight:600;text-decoration:none;">Mission Statement</a>
+    <a href="https://github.com/gigabrainobserver/mcp-scorecard" style="color:#e6edf3;text-decoration:none;">GitHub</a>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="main" id="main" style="display:none"></div>
+  <div class="sidebar" id="sidebar" style="display:none"></div>
+</div>
+
+<div class="footer">
+  <div class="footer-squig">~ ~ ~</div>
+  <div class="footer-text"><a href="https://gigabrain.observer">gigabrain.observer</a> &nbsp;&middot;&nbsp; <a href="privacy.html">2026</a></div>
+</div>
+
+<script>
+let posts = [];
+let activeTag = null;
+let activePub = null;
+
+function fmtDate(d) {
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function fmtMonth(d) {
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+}
+
+function buildSidebar(currentSlug) {
+  // Tag counts
+  const tagCounts = {};
+  const pubCounts = {};
+  const months = {};
+  for (const p of posts) {
+    tagCounts[p.tag] = (tagCounts[p.tag] || 0) + 1;
+    const m = p.date.slice(0, 7);
+    months[m] = (months[m] || 0) + 1;
+    for (const pub of (p.publishers || [])) {
+      pubCounts[pub] = (pubCounts[pub] || 0) + 1;
+    }
+  }
+
+  // Tags
+  const tagOrder = ['Pulse', 'Spotlight', 'Trend', 'Investigation', 'Interview', 'Comparison', 'Incident'];
+  const tagsHTML = tagOrder
+    .filter(t => tagCounts[t])
+    .map(t => {
+      const cls = (activeTag === t && !currentSlug) ? 'sb-item active' : 'sb-item';
+      return `<a class="${cls}" data-filter-tag="${t}"><span class="sb-tag"><span class="tag tag-${t.toLowerCase()}">${t}</span></span><span class="sb-count">${tagCounts[t]}</span></a>`;
+    }).join('');
+
+  // Archives
+  const archiveHTML = Object.entries(months)
+    .sort((a, b) => b[0].localeCompare(a[0]))
+    .map(([m, c]) => {
+      const label = new Date(m + '-01T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+      return `<a class="sb-item" data-filter-month="${m}">${label}<span class="sb-count">${c}</span></a>`;
+    }).join('');
+
+  // Publishers mentioned
+  const pubHTML = Object.entries(pubCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12)
+    .map(([pub, c]) => {
+      const cls = (activePub === pub && !currentSlug) ? 'sb-item active' : 'sb-item';
+      return `<a class="${cls} sb-pub" data-filter-pub="${pub}">${pub}<span class="sb-count">${c}</span></a>`;
+    }).join('');
+
+  document.getElementById('sidebar').innerHTML = `
+    <div class="sb-section">
+      <div class="sb-label">Article Type</div>
+      ${tagsHTML}
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">Archive</div>
+      ${archiveHTML}
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">Publishers Mentioned</div>
+      ${pubHTML}
+    </div>
+  `;
+
+  // Wire sidebar clicks
+  document.querySelectorAll('[data-filter-tag]').forEach(el => {
+    el.addEventListener('click', () => {
+      const t = el.dataset.filterTag;
+      activeTag = (activeTag === t) ? null : t;
+      activePub = null;
+      window.location.hash = '';
+      renderIndex();
+    });
+  });
+  document.querySelectorAll('[data-filter-pub]').forEach(el => {
+    el.addEventListener('click', () => {
+      const p = el.dataset.filterPub;
+      activePub = (activePub === p) ? null : p;
+      activeTag = null;
+      window.location.hash = '';
+      renderIndex();
+    });
+  });
+  document.querySelectorAll('[data-filter-month]').forEach(el => {
+    el.addEventListener('click', () => {
+      // For now just clear other filters — with more months this would filter
+      activeTag = null;
+      activePub = null;
+      window.location.hash = '';
+      renderIndex();
+    });
+  });
+}
+
+function renderIndex() {
+  document.title = 'Blog — MCP Scorecard';
+  document.getElementById('main').style.display = 'block';
+  document.getElementById('sidebar').style.display = 'block';
+
+  let filtered = posts;
+  if (activeTag) filtered = filtered.filter(p => p.tag === activeTag);
+  if (activePub) filtered = filtered.filter(p => (p.publishers || []).includes(activePub));
+
+  const heading = activeTag ? `Blog <span style="font-weight:400;font-size:20px;color:#7d8590">/ ${activeTag}</span>`
+    : activePub ? `Blog <span style="font-weight:400;font-size:20px;color:#7d8590">/ ${activePub}</span>`
+    : 'Blog';
+
+  const cardsHTML = filtered.map(p => {
+    const pubPills = (p.publishers || []).map(pub =>
+      `<a class="post-pub" href="publisher.html#${pub}">${pub}</a>`
+    ).join('');
+    return `<div class="post-card">
+      <div class="post-date"><span class="tag tag-${p.tag.toLowerCase()}">${p.tag}</span> &nbsp;${fmtDate(p.date)}</div>
+      <div class="post-title"><a href="blog.html#${p.slug}">${p.title}</a></div>
+      <div class="post-summary">${p.summary}</div>
+      ${pubPills ? `<div class="post-pubs">${pubPills}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  document.getElementById('main').innerHTML = `<h2>${heading}</h2>${cardsHTML}`;
+  buildSidebar(null);
+}
+
+function renderPost(slug) {
+  const p = posts.find(p => p.slug === slug);
+  if (!p) { renderIndex(); return; }
+
+  document.title = `${p.title} — MCP Scorecard`;
+  document.getElementById('main').style.display = 'block';
+  document.getElementById('sidebar').style.display = 'block';
+
+  const pubPills = (p.publishers || []).map(pub =>
+    `<a class="post-pub" href="publisher.html#${pub}">${pub}</a>`
+  ).join('');
+
+  document.getElementById('main').innerHTML = `
+    <div class="post-view">
+      <a href="blog.html" class="back" onclick="window.location.hash=''; activeTag=null; activePub=null; renderIndex(); return false;">&larr; All posts</a>
+      <div class="post-header">
+        <div class="post-date"><span class="tag tag-${p.tag.toLowerCase()}">${p.tag}</span> &nbsp;${fmtDate(p.date)}</div>
+        <h2>${p.title}</h2>
+        <div class="post-summary">${p.summary}</div>
+        <div class="byline">MCP Scorecard Research</div>
+        ${pubPills ? `<div class="post-pubs" style="margin-top:12px">${pubPills}</div>` : ''}
+      </div>
+      <div class="post-body">${p.body}</div>
+    </div>
+  `;
+
+  buildSidebar(slug);
+  window.scrollTo(0, 0);
+}
+
+function route() {
+  const slug = decodeURIComponent(window.location.hash.slice(1));
+  if (slug) renderPost(slug);
+  else renderIndex();
+}
+
+async function init() {
+  const resp = await fetch('./blog/posts.json');
+  posts = await resp.json();
+  route();
+}
+
+window.addEventListener('hashchange', route);
+init();
+</script>
+</body>
+</html>

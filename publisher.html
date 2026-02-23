@@ -119,6 +119,22 @@
   .detail-pop span { display: flex; align-items: center; gap: 3px; }
   .detail-pop .val { color: #e6edf3; font-weight: 600; }
 
+  /* Related articles */
+  .articles { padding: 24px 32px; border-top: 1px solid #21262d; }
+  .articles-label { font-size: 13px; font-weight: 600; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .article-card { display: block; padding: 10px 14px; border: 1px solid #21262d; border-radius: 6px; margin-bottom: 8px; text-decoration: none; transition: border-color 0.15s; }
+  .article-card:hover { border-color: #58a6ff; text-decoration: none; }
+  .article-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .article-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; }
+  .article-tag-pulse { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .article-tag-spotlight { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .article-tag-trend { background: rgba(210,153,34,0.15); color: #d29922; }
+  .article-tag-investigation { background: rgba(248,81,73,0.15); color: #f85149; }
+  .article-tag-interview { background: rgba(163,113,247,0.15); color: #a371f7; }
+  .article-title { font-size: 14px; font-weight: 600; color: #e6edf3; }
+  .article-date { font-size: 11px; color: #484f58; }
+  .article-summary { font-size: 12px; color: #7d8590; line-height: 1.4; }
+
   /* Empty state */
   .empty { padding: 64px 32px; text-align: center; color: #484f58; font-size: 16px; }
   .empty a { color: #58a6ff; text-decoration: none; }
@@ -140,6 +156,7 @@
     <a href="./">Servers</a>
     <a href="publishers.html">Publishers</a>
     <a href="platforms.html">Platforms</a>
+    <a href="blog.html">Blog</a>
   </div>
   <div class="meta">
     <a href="about.html" style="color:#58a6ff;font-weight:600;text-decoration:none;">Mission Statement</a>
@@ -151,6 +168,7 @@
 <div id="stats-bar" class="stats-bar" style="display:none"></div>
 <div id="flag-summary" class="flag-summary" style="display:none"></div>
 <div id="list" class="list"></div>
+<div id="articles" style="display:none"></div>
 <div id="empty" class="empty" style="display:none"></div>
 
 <div class="footer">
@@ -344,6 +362,30 @@ async function init() {
 
   // Server list
   document.getElementById('list').innerHTML = servers.map(([n, s], i) => renderRow(n, s, i)).join('');
+
+  // Related articles
+  try {
+    const blogResp = await fetch('./blog/posts.json');
+    const posts = await blogResp.json();
+    const related = posts.filter(p => (p.publishers || []).includes(ns));
+    if (related.length) {
+      const el = document.getElementById('articles');
+      el.className = 'articles';
+      el.style.display = 'block';
+      el.innerHTML = `<div class="articles-label">Related Articles</div>` +
+        related.map(p => {
+          const tagCls = p.tag ? 'article-tag-' + p.tag.toLowerCase() : '';
+          return `<a class="article-card" href="blog.html#${p.slug}">
+            <div class="article-card-top">
+              ${p.tag ? `<span class="article-tag ${tagCls}">${p.tag}</span>` : ''}
+              <span class="article-date">${p.date}</span>
+            </div>
+            <div class="article-title">${p.title}</div>
+            <div class="article-summary">${p.summary}</div>
+          </a>`;
+        }).join('');
+    }
+  } catch(e) { /* blog data not available, skip silently */ }
 }
 
 window.addEventListener('hashchange', () => location.reload());
