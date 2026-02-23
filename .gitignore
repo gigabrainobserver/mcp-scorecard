@@ -7,3 +7,7 @@ build/
 .venv/
 .pytest_cache/
 data/
+
+# Working files — never publish
+drafts/
+output_refresh_*/
