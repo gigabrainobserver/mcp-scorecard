@@ -108,27 +108,6 @@
   .sort-select { background: #161b22; border: 1px solid #30363d; color: #e6edf3; padding: 6px 8px; border-radius: 6px; font-size: 12px; }
   .count-label { font-size: 13px; color: #7d8590; margin-left: auto; }
 
-  /* Targets section */
-  .targets-section { border-bottom: 1px solid #21262d; padding: 12px 32px; }
-  .targets-row { display: flex; gap: 5px; align-items: center; flex-wrap: nowrap; padding: 8px 0; border-bottom: 1px solid rgba(33,38,45,0.5); }
-  .targets-row:last-child { border-bottom: none; }
-  .targets-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; width: 84px; flex-shrink: 0; color: #7d8590; }
-  .targets-pills { display: flex; gap: 4px; flex-wrap: wrap; }
-  .target-pill {
-    padding: 3px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid #30363d;
-    background: #161b22;
-    color: #8b949e;
-    transition: all 0.15s;
-  }
-  .target-pill:hover { border-color: #58a6ff; color: #e6edf3; }
-  .target-pill.active { background: rgba(88,166,255,0.15); border-color: #58a6ff; color: #58a6ff; }
-  .target-pill .tp-count { font-weight: 400; opacity: 0.5; margin-left: 3px; font-size: 10px; }
-
   /* List */
   .list { display: flex; flex-direction: column; }
 
@@ -259,13 +238,10 @@
 
 <div class="filter-panel" id="filter-panel"></div>
 
-<div class="targets-section" id="targets-section"></div>
-
 <div class="list" id="list"></div>
 
 <script>
 let allServers = [];
-let activeTarget = null; // Currently selected target filter
 
 // Filter state: per-row sets. Within a row = OR, across rows = AND.
 const filters = {
@@ -444,7 +420,6 @@ function render() {
 
   let filtered = allServers.filter(([name, s]) => {
     if (q && !name.toLowerCase().includes(q)) return false;
-    if (activeTarget && !(s.targets || []).includes(activeTarget)) return false;
     for (const cat of Object.keys(filters)) {
       if (!matchRow(s, cat)) return false;
     }
@@ -630,67 +605,6 @@ async function init() {
       const val = btn.dataset.val;
       if (filters[cat].has(val)) { filters[cat].delete(val); btn.classList.remove('active'); }
       else { filters[cat].add(val); btn.classList.add('active'); }
-      render();
-    });
-  });
-
-  // --- Build targets section ---
-  const CAT_ORDER = [
-    ['services', 'Services'],
-    ['databases', 'Databases'],
-    ['infra', 'Infra'],
-    ['tools', 'Dev Tools'],
-  ];
-  const TARGET_CAT = {
-    'GitHub':'services','Slack':'services','Notion':'services','Google Calendar':'services',
-    'Google Docs':'services','Google Sheets':'services','Google Drive':'services','Gmail':'services',
-    'Jira':'services','Confluence':'services','Linear':'services','Discord':'services',
-    'Telegram':'services','Twitter/X':'services','Trello':'services','Asana':'services',
-    'ClickUp':'services','Salesforce':'services','HubSpot':'services','Stripe':'services',
-    'Shopify':'services','Airtable':'services','YouTube':'services','Spotify':'services',
-    'Obsidian':'services','WordPress':'services','Todoist':'services',
-    'PostgreSQL':'databases','MySQL':'databases','MongoDB':'databases','SQLite':'databases',
-    'Redis':'databases','Elasticsearch':'databases','Supabase':'databases','Firebase':'databases',
-    'Neo4j':'databases','Pinecone':'databases','Qdrant':'databases','ChromaDB':'databases','Weaviate':'databases',
-    'Docker':'infra','Kubernetes':'infra','AWS':'infra','Azure':'infra',
-    'Cloudflare':'infra','Vercel':'infra','Terraform':'infra',
-    'Git':'tools','Puppeteer':'tools','Playwright':'tools','Sentry':'tools','Datadog':'tools','Grafana':'tools',
-  };
-
-  // Count servers per target
-  const targetCounts = {};
-  for (const [, s] of allServers) {
-    for (const t of (s.targets || [])) {
-      targetCounts[t] = (targetCounts[t] || 0) + 1;
-    }
-  }
-
-  // Build rows — top 10 per category by count
-  let targetsHTML = '';
-  for (const [catKey, catLabel] of CAT_ORDER) {
-    const targets = Object.entries(targetCounts)
-      .filter(([t]) => TARGET_CAT[t] === catKey)
-      .sort((a, b) => b[1] - a[1]);
-    if (!targets.length) continue;
-    const pills = targets.map(([t, c]) =>
-      `<button class="target-pill" data-target="${t}">${t}<span class="tp-count">${c}</span></button>`
-    ).join('');
-    targetsHTML += `<div class="targets-row"><span class="targets-label">${catLabel}</span><div class="targets-pills">${pills}</div></div>`;
-  }
-  document.getElementById('targets-section').innerHTML = targetsHTML;
-
-  // Wire up target pills — single select toggle
-  document.querySelectorAll('.target-pill').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const t = btn.dataset.target;
-      if (activeTarget === t) {
-        activeTarget = null;
-        btn.classList.remove('active');
-      } else {
-        document.querySelectorAll('.target-pill.active').forEach(b => b.classList.remove('active'));
-        activeTarget = t;
-        btn.classList.add('active');
-      }
       render();
     });
   });

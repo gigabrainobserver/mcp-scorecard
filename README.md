@@ -76,7 +76,7 @@ The pipeline produces three JSON files:
 ```bash
 git clone https://github.com/gigabrainobserver/mcp-scorecard.git
 cd mcp-scorecard
-pip install -e .
+uv venv && uv pip install -e .
 ```
 
 Run a full scan:
@@ -85,7 +85,7 @@ Run a full scan:
 # Optional: set GITHUB_TOKEN for 5000 req/hr (vs 60 unauthenticated)
 export GITHUB_TOKEN=ghp_...
 
-python -m mcp_scorecard
+uv run mcp_scorecard
 ```
 
 Output goes to `./output/` by default. Use `-o` to specify a different directory.
@@ -106,8 +106,8 @@ Runs daily via GitHub Actions. ~70 min total runtime. All free APIs.
 ```bash
 git clone https://github.com/gigabrainobserver/mcp-scorecard.git
 cd mcp-scorecard
-pip install -e .
-pytest
+uv venv && uv pip install -e .
+uv run pytest
 ```
 
 ## License

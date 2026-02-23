@@ -9,6 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from mcp_scorecard.config import VERIFIED_PUBLISHERS  # noqa: E402
+from mcp_scorecard.scoring.targets import infer_targets  # noqa: E402
 
 
 def generate_badges_from_signals(signals: dict, flags: list[str]) -> dict:
@@ -181,6 +182,7 @@ def main():
         )
         ns = name.split("/")[0] if "/" in name else ""
         server["verified_publisher"] = ns in VERIFIED_PUBLISHERS
+        server["targets"] = infer_targets(name)
 
     idx_path.write_text(json.dumps(data, indent=2))
     print(f"Added badges to {len(data['servers'])} servers in {idx_path}")

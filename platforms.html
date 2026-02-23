@@ -59,6 +59,27 @@
   .plat-flag-critical { background: rgba(248,81,73,0.18); color: #f85149; }
   .plat-flag-warning { background: rgba(210,153,34,0.18); color: #d29922; }
 
+  /* Target pills browse section */
+  .targets-section { border-bottom: 1px solid #21262d; padding: 12px 32px; }
+  .targets-row { display: flex; gap: 5px; align-items: center; flex-wrap: nowrap; padding: 8px 0; border-bottom: 1px solid rgba(33,38,45,0.5); }
+  .targets-row:last-child { border-bottom: none; }
+  .targets-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; width: 84px; flex-shrink: 0; color: #7d8590; }
+  .targets-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+  .target-pill {
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #30363d;
+    background: #161b22;
+    color: #8b949e;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .target-pill:hover { border-color: #58a6ff; color: #e6edf3; }
+  .target-pill .tp-count { font-weight: 400; opacity: 0.5; margin-left: 3px; font-size: 10px; }
+
   .note { padding: 12px 32px; font-size: 12px; color: #484f58; border-bottom: 1px solid #21262d; }
 
   .footer { padding: 32px 32px 24px; text-align: center; margin-top: 16px; }
@@ -83,6 +104,8 @@
     <a href="https://github.com/gigabrainobserver/mcp-scorecard" style="color:#e6edf3;text-decoration:none;">GitHub</a>
   </div>
 </div>
+
+<div class="targets-section" id="targets-section"></div>
 
 <div class="controls">
   <input type="text" class="search" id="search" placeholder="Search platforms...">
@@ -197,6 +220,48 @@ async function init() {
   const tagged = allPlats.reduce((sum, p) => sum + p.count, 0);
   document.getElementById('note').textContent =
     `${allPlats.length} platforms detected across ${tagged} server listings (${totalServers} total servers in registry).`;
+
+  // --- Build target pills browse section ---
+  const CAT_ORDER = [
+    ['services', 'Services'],
+    ['databases', 'Databases'],
+    ['infra', 'Infra'],
+    ['tools', 'Dev Tools'],
+  ];
+  const TARGET_CAT = {
+    'GitHub':'services','Slack':'services','Notion':'services','Google Calendar':'services',
+    'Google Docs':'services','Google Sheets':'services','Google Drive':'services','Gmail':'services',
+    'Jira':'services','Confluence':'services','Linear':'services','Discord':'services',
+    'Telegram':'services','Twitter/X':'services','Trello':'services','Asana':'services',
+    'ClickUp':'services','Salesforce':'services','HubSpot':'services','Stripe':'services',
+    'Shopify':'services','Airtable':'services','YouTube':'services','Spotify':'services',
+    'Obsidian':'services','WordPress':'services','Todoist':'services',
+    'GitLab':'services','Bitbucket':'services',
+    'PostgreSQL':'databases','MySQL':'databases','MongoDB':'databases','SQLite':'databases',
+    'Redis':'databases','Elasticsearch':'databases','Supabase':'databases','Firebase':'databases',
+    'Neo4j':'databases','Pinecone':'databases','Qdrant':'databases','ChromaDB':'databases','Weaviate':'databases',
+    'Docker':'infra','Kubernetes':'infra','AWS':'infra','Azure':'infra',
+    'Cloudflare':'infra','Vercel':'infra','Terraform':'infra',
+    'Git':'tools','Puppeteer':'tools','Playwright':'tools','Sentry':'tools','Datadog':'tools','Grafana':'tools',
+  };
+
+  const targetCounts = {};
+  for (const p of allPlats) {
+    targetCounts[p.name] = p.count;
+  }
+
+  let targetsHTML = '';
+  for (const [catKey, catLabel] of CAT_ORDER) {
+    const targets = Object.entries(targetCounts)
+      .filter(([t]) => TARGET_CAT[t] === catKey)
+      .sort((a, b) => b[1] - a[1]);
+    if (!targets.length) continue;
+    const pills = targets.map(([t, c]) =>
+      `<a class="target-pill" href="platform.html#${encodeURIComponent(t)}">${t}<span class="tp-count">${c}</span></a>`
+    ).join('');
+    targetsHTML += `<div class="targets-row"><span class="targets-label">${catLabel}</span><div class="targets-pills">${pills}</div></div>`;
+  }
+  document.getElementById('targets-section').innerHTML = targetsHTML;
 
   document.getElementById('search').addEventListener('input', render);
   document.getElementById('sort').addEventListener('change', render);

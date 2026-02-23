@@ -36,6 +36,7 @@ class ServerScore(BaseModel):
     flags: list[str] = Field(default_factory=list)
     badges: BadgeGroups = Field(default_factory=BadgeGroups)
     verified_publisher: bool = False
+    targets: list[str] = Field(default_factory=list)
 
 
 class CategoryScores(BaseModel):

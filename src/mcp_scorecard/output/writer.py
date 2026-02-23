@@ -9,6 +9,7 @@ from pathlib import Path
 from statistics import median
 
 from mcp_scorecard.config import OUTPUT_DIR, SCORE_BANDS, VERIFIED_PUBLISHERS
+from mcp_scorecard.scoring.targets import infer_targets
 from mcp_scorecard.output.models import (
     Badge,
     BadgeGroups,
@@ -66,6 +67,7 @@ def _build_index(
             flags=data["flags"],
             badges=badge_groups,
             verified_publisher=ns in VERIFIED_PUBLISHERS,
+            targets=infer_targets(name),
         )
     return ScorecardIndex(
         generated_at=now,

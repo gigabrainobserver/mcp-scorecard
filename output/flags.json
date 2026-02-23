@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-02-23T16:43:04.313499Z",
+  "generated_at": "2026-02-23T20:01:41.975054Z",
   "flags": [
     {
       "flag": "DEAD_ENTRY",
@@ -123,7 +123,7 @@
     },
     {
       "flag": "NO_SOURCE",
-      "count": 290,
+      "count": 291,
       "servers": [
         "ai.alpic.mcp/alpic-mcp",
         "ai.alpic.test/test-mcp-server",
@@ -322,6 +322,7 @@
         "io.github.nansen-ai/nansen-mcp",
         "io.github.noahgift/depyler-mcp",
         "io.github.noahgift/ruchy-mcp",
+        "io.github.oytuntez/motaword-mcp",
         "io.github.paiml/pmat-agent",
         "io.github.paiml/rash",
         "io.github.paolobietolini/gtm-mcp-server",
