@@ -1,9 +1,9 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-02-23T20:01:41.975054Z",
-  "server_count": 2468,
-  "servers_with_repo": 2059,
-  "servers_with_packages": 1657,
+  "generated_at": "2026-02-26T11:11:07.620748Z",
+  "server_count": 2638,
+  "servers_with_repo": 2212,
+  "servers_with_packages": 1778,
   "score_distribution": [
     {
       "label": "High Trust",
@@ -15,19 +15,19 @@
       "label": "Moderate Trust",
       "min_score": 60,
       "max_score": 79,
-      "count": 482
+      "count": 493
     },
     {
       "label": "Low Trust",
       "min_score": 40,
       "max_score": 59,
-      "count": 1341
+      "count": 1466
     },
     {
       "label": "Very Low Trust",
       "min_score": 20,
       "max_score": 39,
-      "count": 607
+      "count": 641
     },
     {
       "label": "Unknown/Suspicious",
@@ -37,14 +37,14 @@
     }
   ],
   "flag_summary": {
-    "TEMPLATE_DESCRIPTION": 483,
-    "NO_SOURCE": 291,
-    "DESCRIPTION_DUPLICATE": 49,
-    "SENSITIVE_CRED_REQUEST": 46,
-    "DEAD_ENTRY": 28,
+    "TEMPLATE_DESCRIPTION": 515,
+    "NO_SOURCE": 306,
+    "DESCRIPTION_DUPLICATE": 50,
+    "SENSITIVE_CRED_REQUEST": 47,
+    "DEAD_ENTRY": 29,
     "HIGH_SECRET_DEMAND": 24,
     "REPO_ARCHIVED": 15,
-    "STAGING_ARTIFACT": 11
+    "STAGING_ARTIFACT": 12
   },
   "top_servers": [
     {
@@ -173,6 +173,6 @@
       "trust_label": "High Trust"
     }
   ],
-  "average_trust_score": 48.8,
+  "average_trust_score": 48.7,
   "median_trust_score": 52
 }
