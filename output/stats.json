@@ -1,33 +1,33 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-02-26T11:11:07.620748Z",
-  "server_count": 2638,
-  "servers_with_repo": 2212,
-  "servers_with_packages": 1778,
+  "generated_at": "2026-03-01T17:10:40.400658Z",
+  "server_count": 2822,
+  "servers_with_repo": 2376,
+  "servers_with_packages": 1896,
   "score_distribution": [
     {
       "label": "High Trust",
       "min_score": 80,
       "max_score": 100,
-      "count": 34
+      "count": 35
     },
     {
       "label": "Moderate Trust",
       "min_score": 60,
       "max_score": 79,
-      "count": 493
+      "count": 517
     },
     {
       "label": "Low Trust",
       "min_score": 40,
       "max_score": 59,
-      "count": 1466
+      "count": 1554
     },
     {
       "label": "Very Low Trust",
       "min_score": 20,
       "max_score": 39,
-      "count": 641
+      "count": 712
     },
     {
       "label": "Unknown/Suspicious",
@@ -37,16 +37,21 @@
     }
   ],
   "flag_summary": {
-    "TEMPLATE_DESCRIPTION": 515,
-    "NO_SOURCE": 306,
-    "DESCRIPTION_DUPLICATE": 50,
-    "SENSITIVE_CRED_REQUEST": 47,
-    "DEAD_ENTRY": 29,
-    "HIGH_SECRET_DEMAND": 24,
-    "REPO_ARCHIVED": 15,
-    "STAGING_ARTIFACT": 12
+    "TEMPLATE_DESCRIPTION": 538,
+    "NO_SOURCE": 314,
+    "DESCRIPTION_DUPLICATE": 52,
+    "SENSITIVE_CRED_REQUEST": 51,
+    "DEAD_ENTRY": 33,
+    "HIGH_SECRET_DEMAND": 26,
+    "REPO_ARCHIVED": 14,
+    "STAGING_ARTIFACT": 13
   },
   "top_servers": [
+    {
+      "name": "io.github.D4Vinci/Scrapling",
+      "trust_score": 92,
+      "trust_label": "High Trust"
+    },
     {
       "name": "io.github.firebase/firebase-mcp",
       "trust_score": 89,
@@ -138,17 +143,17 @@
       "trust_label": "High Trust"
     },
     {
+      "name": "io.github.IvanMurzak/Unity-MCP",
+      "trust_score": 83,
+      "trust_label": "High Trust"
+    },
+    {
       "name": "io.github.MervinPraison/praisonai",
       "trust_score": 83,
       "trust_label": "High Trust"
     },
     {
       "name": "io.github.GLips/Figma-Context-MCP",
-      "trust_score": 82,
-      "trust_label": "High Trust"
-    },
-    {
-      "name": "io.github.IvanMurzak/Unity-MCP",
       "trust_score": 82,
       "trust_label": "High Trust"
     },
@@ -166,13 +171,8 @@
       "name": "io.github.wonderwhy-er/desktop-commander",
       "trust_score": 82,
       "trust_label": "High Trust"
-    },
-    {
-      "name": "io.github.CursorTouch/Windows-MCP",
-      "trust_score": 81,
-      "trust_label": "High Trust"
     }
   ],
-  "average_trust_score": 48.7,
+  "average_trust_score": 48.4,
   "median_trust_score": 52
 }
