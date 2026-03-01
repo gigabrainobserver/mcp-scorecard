@@ -1,10 +1,10 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-03-01T17:10:40.400658Z",
+  "generated_at": "2026-03-01T18:44:25.332017Z",
   "flags": [
     {
       "flag": "DEAD_ENTRY",
-      "count": 33,
+      "count": 32,
       "servers": [
         "capital.hove/read-only-mysql-mcp-server",
         "io.github.Adessoadesso/panoramic-ireland-booking",
@@ -30,15 +30,14 @@
         "io.github.noahgift/pmcp",
         "io.github.noahgift/ruchy-mcp",
         "io.github.oogdevs/clawtube-mcp",
-        "io.github.oxgeneral/tolk-mcp-server",
         "io.github.paiml/pmat-agent",
         "io.github.paiml/rash",
         "io.github.ptyagiegnyte/egnyte-mcp-server",
+        "io.github.retailbox-automation/clickup-mcp",
         "io.github.sachin-shetty/egnyte-ai-samples",
         "io.github.vardior9/apiiro",
         "io.github.vinaybhosle/freightgate-mcp-server",
-        "io.github.vinur1992/testing_repo",
-        "io.github.xieyuschen/gopls-mcp"
+        "io.github.vinur1992/testing_repo"
       ]
     },
     {
@@ -133,7 +132,7 @@
     },
     {
       "flag": "NO_SOURCE",
-      "count": 314,
+      "count": 315,
       "servers": [
         "ai.adadvisor/mcp-server",
         "ai.alpic.mcp/alpic-mcp",
@@ -280,6 +279,7 @@
         "com.traderwai/mcp-server",
         "com.trycloudflare.annotated-lot-operational-tourism/kai-agi",
         "com.usesideways/sideways",
+        "com.versedb/versedb-mcp",
         "com.webforj/mcp",
         "com.wherobots/mcp-server",
         "com.windowsforum/mcp-server",
@@ -453,7 +453,7 @@
     },
     {
       "flag": "REPO_ARCHIVED",
-      "count": 14,
+      "count": 15,
       "servers": [
         "ai.smithery/MisterSandFR-supabase-mcp-selfhosted",
         "io.github.AungMyoKyaw/betterprompt-mcp",
@@ -468,6 +468,7 @@
         "io.github.antnewman/pm-validate",
         "io.github.koki-develop/esa-mcp-server",
         "io.github.linggen/linggen",
+        "io.github.timesheetIO/timesheet-mcp",
         "io.github.tuananh/hyper-mcp"
       ]
     },
@@ -549,7 +550,7 @@
     },
     {
       "flag": "TEMPLATE_DESCRIPTION",
-      "count": 538,
+      "count": 539,
       "servers": [
         "ai.anzenna/anzenna",
         "ai.com.mcp/lenny-rachitsky-podcast",
@@ -622,6 +623,7 @@
         "io.github.BamaCharanChhandogi/blogcaster-mcp",
         "io.github.CakeRepository/1password",
         "io.github.ChiR24/unreal-engine-mcp",
+        "io.github.Chill-AI-Space/vault",
         "io.github.ChromeDevTools/chrome-devtools-mcp",
         "io.github.CodeLogicIncEngineering/codelogic-mcp-server",
         "io.github.CogitatorTech/omni-nli",

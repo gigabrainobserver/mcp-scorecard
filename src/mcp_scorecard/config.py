@@ -201,6 +201,56 @@ VERIFIED_PUBLISHERS: set[str] = {
     "io.github.upstash",
 }
 
+# --- License Classification ---
+# SPDX IDs grouped by commercial-use impact.
+# Source: SPDX license list + common non-standard identifiers from GitHub.
+PERMISSIVE_LICENSES: set[str] = {
+    "MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC",
+    "Unlicense", "CC0-1.0", "0BSD", "Zlib", "BSL-1.0",  # Boost, not Business Source
+    "WTFPL", "PostgreSQL", "X11", "Artistic-2.0", "MS-PL",
+    "ECL-2.0", "MulanPSL-2.0",
+    "CC-BY-4.0",  # Attribution only — permissive
+}
+
+COPYLEFT_LICENSES: set[str] = {
+    "GPL-2.0-only", "GPL-2.0-or-later", "GPL-3.0-only", "GPL-3.0-or-later",
+    "GPL-2.0", "GPL-3.0",  # GitHub often returns these without suffixes
+    "AGPL-3.0-only", "AGPL-3.0-or-later", "AGPL-3.0",
+    "LGPL-2.1-only", "LGPL-2.1-or-later", "LGPL-2.1",
+    "LGPL-3.0-only", "LGPL-3.0-or-later", "LGPL-3.0",
+    "MPL-2.0", "EUPL-1.1", "EUPL-1.2", "OSL-3.0", "CPAL-1.0", "EPL-2.0",
+    "CECILL-2.1", "OFL-1.1",
+    "CC-BY-SA-4.0",  # Share-alike = copyleft
+}
+
+RESTRICTIVE_LICENSES: set[str] = {
+    "BUSL-1.1",      # Business Source License — time-delayed open source
+    "SSPL-1.0",      # Server Side Public License (MongoDB)
+    "Elastic-2.0",   # Elastic License — no competing SaaS
+    "CC-BY-NC-4.0", "CC-BY-NC-SA-4.0", "CC-BY-NC-ND-4.0",  # Non-commercial
+    "CC-BY-ND-4.0",  # No derivatives
+    "PolyForm-Noncommercial-1.0.0",
+    "PolyForm-Small-Business-1.0.0",
+    "Commons-Clause",
+}
+
+
+def classify_license(spdx_id: str | None) -> str:
+    """Classify a license SPDX ID into a category.
+
+    Returns: "permissive", "copyleft", "restrictive", or "unknown".
+    """
+    if not spdx_id or spdx_id in ("NOASSERTION", "OTHER"):
+        return "unknown"
+    if spdx_id in PERMISSIVE_LICENSES:
+        return "permissive"
+    if spdx_id in COPYLEFT_LICENSES:
+        return "copyleft"
+    if spdx_id in RESTRICTIVE_LICENSES:
+        return "restrictive"
+    return "unknown"
+
+
 # --- Enrichment Cache ---
 GITHUB_CACHE_FILE = "data/github_cache.json"
 GITHUB_CACHE_MAX_AGE_DAYS = 7  # re-fetch servers older than this

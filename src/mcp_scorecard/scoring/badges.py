@@ -39,9 +39,8 @@ _FLAG_LABELS = {
 }
 
 # Provenance signal → display label
-_PROVENANCE_SIGNALS = [
+_PROVENANCE_BOOL_SIGNALS = [
     ("has_source_repo", "Source Repo"),
-    ("has_license", "License"),
     ("has_installable_package", "Package"),
     ("namespace_matches_owner", "NS Match"),
     ("repo_not_archived", "Active Repo"),
@@ -51,6 +50,13 @@ _PROVENANCE_SIGNALS = [
     ("has_code_of_conduct", "Code of Conduct"),
     ("unique_description", "Unique Desc"),
 ]
+
+_LICENSE_CATEGORY_DISPLAY = {
+    "permissive": ("permissive", "good"),
+    "copyleft": ("copyleft", "neutral"),
+    "restrictive": ("restrictive", "warning"),
+    "unknown": ("none", "critical"),
+}
 
 
 def generate_badges(
@@ -139,16 +145,35 @@ def _security_badges(
 
 
 def _provenance_badges(signals: dict) -> list[dict]:
-    """Identity and source verification badges (all boolean)."""
-    return [
-        {
+    """Identity and source verification badges."""
+    badges: list[dict] = []
+
+    # License as an enum badge with category + actual SPDX ID
+    lic_cat = signals.get("license_category", "unknown")
+    lic_spdx = signals.get("github_license") or ""
+    display_val, level = _LICENSE_CATEGORY_DISPLAY.get(
+        lic_cat, ("none", "critical")
+    )
+    # Show the actual license ID when known (e.g. "MIT" not just "permissive")
+    label_detail = lic_spdx if lic_spdx and lic_spdx != "NOASSERTION" else display_val
+    badges.append({
+        "key": "license",
+        "type": "enum",
+        "label": "License",
+        "value": label_detail,
+        "level": level,
+    })
+
+    # Boolean badges for remaining provenance signals
+    for key, label in _PROVENANCE_BOOL_SIGNALS:
+        badges.append({
             "key": key,
             "type": "bool",
             "label": label,
             "value": bool(signals.get(key, False)),
-        }
-        for key, label in _PROVENANCE_SIGNALS
-    ]
+        })
+
+    return badges
 
 
 def _activity_badges(signals: dict, github: GitHubData | None) -> list[dict]:

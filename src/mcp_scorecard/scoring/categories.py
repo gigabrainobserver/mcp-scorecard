@@ -26,6 +26,7 @@ from mcp_scorecard.config import (
     TRANSPORT_RISK,
     TRANSPORT_RISK_DEFAULT,
     WATCHERS_LOG_BRACKETS,
+    classify_license,
 )
 
 # Type aliases for readability
@@ -101,11 +102,20 @@ def score_provenance(
     if not_archived:
         points += PROVENANCE_POINTS["repo_not_archived"]
 
-    # has_license
-    has_license = github is not None and bool(github.get("github_license"))
+    # has_license — pass through the actual license string and classify it
+    raw_license = github.get("github_license") if github is not None else None
+    license_category = classify_license(raw_license)
+    signals["github_license"] = raw_license
+    signals["license_category"] = license_category
+    # NOASSERTION and unknown licenses don't count as "has license"
+    has_license = license_category != "unknown"
     signals["has_license"] = has_license
     if has_license:
-        points += PROVENANCE_POINTS["has_license"]
+        # Base 5 pts for any real license; bonus 5 for permissive
+        half = PROVENANCE_POINTS["has_license"] // 2  # 5
+        points += half
+        if license_category == "permissive":
+            points += half  # full 10 for permissive
 
     # has_installable_package
     has_pkg = bool(server.get("has_packages"))

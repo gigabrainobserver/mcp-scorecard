@@ -1,33 +1,33 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-03-01T17:10:40.400658Z",
-  "server_count": 2822,
-  "servers_with_repo": 2376,
-  "servers_with_packages": 1896,
+  "generated_at": "2026-03-01T18:44:25.332017Z",
+  "server_count": 2830,
+  "servers_with_repo": 2383,
+  "servers_with_packages": 1902,
   "score_distribution": [
     {
       "label": "High Trust",
       "min_score": 80,
       "max_score": 100,
-      "count": 35
+      "count": 33
     },
     {
       "label": "Moderate Trust",
       "min_score": 60,
       "max_score": 79,
-      "count": 517
+      "count": 506
     },
     {
       "label": "Low Trust",
       "min_score": 40,
       "max_score": 59,
-      "count": 1554
+      "count": 1597
     },
     {
       "label": "Very Low Trust",
       "min_score": 20,
       "max_score": 39,
-      "count": 712
+      "count": 690
     },
     {
       "label": "Unknown/Suspicious",
@@ -37,13 +37,13 @@
     }
   ],
   "flag_summary": {
-    "TEMPLATE_DESCRIPTION": 538,
-    "NO_SOURCE": 314,
+    "TEMPLATE_DESCRIPTION": 539,
+    "NO_SOURCE": 315,
     "DESCRIPTION_DUPLICATE": 52,
     "SENSITIVE_CRED_REQUEST": 51,
-    "DEAD_ENTRY": 33,
+    "DEAD_ENTRY": 32,
     "HIGH_SECRET_DEMAND": 26,
-    "REPO_ARCHIVED": 14,
+    "REPO_ARCHIVED": 15,
     "STAGING_ARTIFACT": 13
   },
   "top_servers": [
@@ -83,11 +83,6 @@
       "trust_label": "High Trust"
     },
     {
-      "name": "io.github.basicmachines-co/basic-memory",
-      "trust_score": 86,
-      "trust_label": "High Trust"
-    },
-    {
       "name": "io.github.bytedance/mcp-server-browser",
       "trust_score": 86,
       "trust_label": "High Trust"
@@ -114,6 +109,11 @@
     },
     {
       "name": "io.github.apollographql/apollo-mcp-server",
+      "trust_score": 84,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.basicmachines-co/basic-memory",
       "trust_score": 84,
       "trust_label": "High Trust"
     },
@@ -158,11 +158,6 @@
       "trust_label": "High Trust"
     },
     {
-      "name": "io.github.netdata/mcp-server",
-      "trust_score": 82,
-      "trust_label": "High Trust"
-    },
-    {
       "name": "io.github.robotmcp/ros-mcp-server",
       "trust_score": 82,
       "trust_label": "High Trust"
@@ -170,6 +165,11 @@
     {
       "name": "io.github.wonderwhy-er/desktop-commander",
       "trust_score": 82,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.CursorTouch/Windows-MCP",
+      "trust_score": 81,
       "trust_label": "High Trust"
     }
   ],
