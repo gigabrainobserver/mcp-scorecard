@@ -122,6 +122,7 @@
   .row-link { color: #58a6ff; text-decoration: none; flex-shrink: 0; font-size: 12px; line-height: 1; opacity: 0.7; }
   .row-link:hover { opacity: 1; }
   .verified-badge { flex-shrink: 0; display: inline-flex; align-items: center; }
+  .unid-lic-badge { flex-shrink: 0; display: inline-flex; align-items: center; cursor: help; }
 
   /* Score pill in row */
   .score-pill { padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; flex-shrink: 0; min-width: 32px; text-align: center; }
@@ -303,6 +304,10 @@ function renderRow(name, s, idx) {
     ? `<span class="verified-badge" title="Verified Publisher"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#58a6ff"/><path d="M9 12l2 2 4-4" stroke="#0d1117" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>`
     : '';
 
+  const unidentifiedLicIcon = s.signals?.github_license === 'NOASSERTION'
+    ? `<span class="unid-lic-badge" title="Unidentified License"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L1 21h22L12 2z" fill="#d29922"/><text x="12" y="18" text-anchor="middle" font-size="14" font-weight="bold" fill="#0d1117">!</text></svg></span>`
+    : '';
+
   // Condensed row: flags (only critical/warning in condensed view)
   const rowFlags = s.flags
     .filter(f => FLAG_SEV[f] !== 'info')
@@ -335,7 +340,7 @@ function renderRow(name, s, idx) {
   return `<div class="row" data-idx="${idx}" onclick="toggleDetail(${idx})">
       <span class="row-chevron">&#9654;</span>
       <span class="score-pill score-${cls}">${s.trust_score}</span>
-      <span class="row-name">${linkIcon}<a class="ns" href="publisher.html#${ns}" onclick="event.stopPropagation()">${ns}/</a>${id}${verifiedIcon}</span>
+      <span class="row-name">${linkIcon}<a class="ns" href="publisher.html#${ns}" onclick="event.stopPropagation()">${ns}/</a>${id}${verifiedIcon}${unidentifiedLicIcon}</span>
       <span class="row-flags">${rowFlags}</span>
       <span class="row-targets">${rowTargets}</span>
       <span class="row-pop">${popParts.join('')}</span>
