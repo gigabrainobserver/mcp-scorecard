@@ -80,6 +80,7 @@
   .filter-row-label.description { color: #7d8590; }
   .filter-row-label.activity { color: #a371f7; }
   .filter-row-label.popularity { color: #d29922; }
+  .filter-row-label.license { color: #58a6ff; }
 
   /* Severity pills — match detail badge colors */
   .pill-critical { background: rgba(248,81,73,0.18); border-color: rgba(248,81,73,0.3); color: #f85149; }
@@ -251,6 +252,7 @@ const filters = {
   provenance: new Set(),
   activity: new Set(),
   popularity: new Set(),
+  license: new Set(),
 };
 
 function scoreClass(s) {
@@ -378,7 +380,9 @@ function matchRow(s, cat) {
       if (v === '+full_prov') {
         const prov = s.badges?.provenance || [];
         const has = (k) => prov.find(p => p.key === k)?.value;
-        if (has('has_source_repo') && has('has_license') && has('has_installable_package')) return true;
+        const licBadge = prov.find(p => p.key === 'license');
+        const hasLic = licBadge && licBadge.level !== 'critical';
+        if (has('has_source_repo') && hasLic && has('has_installable_package')) return true;
       }
       if (v === '+active') {
         const act = s.badges?.activity || [];
@@ -389,6 +393,9 @@ function matchRow(s, cat) {
       if (v === '+popular') {
         if ((s.badges?.popularity?.stars || 0) >= 100) return true;
       }
+      if (v === '+licensed') {
+        if ((s.signals?.license_category || 'unknown') !== 'unknown') return true;
+      }
     }
     // Flag-based pills
     else if (s.flags.includes(v)) return true;
@@ -398,6 +405,12 @@ function matchRow(s, cat) {
       const p = prov.find(p => p.key === v.slice(3));
       if (p && !p.value) return true;
     }
+    // License pills
+    else if (v === 'lic:permissive' && s.signals?.license_category === 'permissive') return true;
+    else if (v === 'lic:MIT' && s.signals?.github_license === 'MIT') return true;
+    else if (v === 'lic:copyleft' && s.signals?.license_category === 'copyleft') return true;
+    else if (v === 'lic:none' && (s.signals?.license_category || 'unknown') === 'unknown' && s.signals?.github_license !== 'NOASSERTION') return true;
+    else if (v === 'lic:unidentified' && s.signals?.github_license === 'NOASSERTION') return true;
     // Star pills
     else if (v === 'stars:0' && (s.badges?.popularity?.stars || 0) === 0) return true;
     else if (v === 'stars:10' && (s.badges?.popularity?.stars || 0) >= 10) return true;
@@ -477,6 +490,7 @@ async function init() {
   const actCounts = {};
   let starBuckets = { 0: 0, 10: 0, 100: 0, 1000: 0 };
   let cleanCreds = 0, hasSource = 0, original = 0, fullProv = 0, activeDevs = 0, popular = 0;
+  let licCounts = { permissive: 0, copyleft: 0, none: 0, unidentified: 0, licensed: 0 };
 
   for (const [, s] of allServers) {
     // Positive counts
@@ -486,7 +500,9 @@ async function init() {
 
     const prov = s.badges?.provenance || [];
     const has = (k) => prov.find(p => p.key === k)?.value;
-    if (has('has_source_repo') && has('has_license') && has('has_installable_package')) fullProv++;
+    const licBadge = prov.find(p => p.key === 'license');
+    const hasLic = licBadge && licBadge.level !== 'critical';
+    if (has('has_source_repo') && hasLic && has('has_installable_package')) fullProv++;
 
     const act = s.badges?.activity || [];
     const commits = act.find(a => a.key === 'commit_activity')?.value;
@@ -499,6 +515,16 @@ async function init() {
     if (stars >= 10) starBuckets[10]++;
     if (stars >= 100) starBuckets[100]++;
     if (stars >= 1000) starBuckets[1000]++;
+
+    // License
+    const licCat = s.signals?.license_category || 'unknown';
+    if (licCat !== 'unknown') licCounts.licensed++;
+    licCounts[licCat] = (licCounts[licCat] || 0) + 1;
+    if (s.signals?.github_license === 'MIT') licCounts.MIT = (licCounts.MIT || 0) + 1;
+    if (licCat === 'unknown') {
+      if (s.signals?.github_license === 'NOASSERTION') licCounts.unidentified++;
+      else licCounts.none++;
+    }
 
     // Provenance missing
     for (const b of prov) {
@@ -589,6 +615,19 @@ async function init() {
       .map(([v, l, c, sev]) => `<button class="pill pill-${sev}" data-cat="popularity" data-val="${v}">${l}<span class="pill-count">${c}</span></button>`).join('')
   );
 
+  // Row 7: License
+  const licPills = pillRow(
+    `<button class="pill pill-positive" data-cat="license" data-val="+licensed">Licensed<span class="pill-count">${licCounts.licensed}</span></button>`,
+    [
+      ['lic:permissive', 'Permissive', licCounts.permissive, 'good'],
+      ['lic:MIT', 'MIT', licCounts.MIT || 0, 'good'],
+      ['lic:copyleft', 'Copyleft', licCounts.copyleft, 'neutral'],
+      ['lic:none', 'No License', licCounts.none, 'warning'],
+      ['lic:unidentified', 'Unidentified', licCounts.unidentified, 'neutral'],
+    ].filter(([,,c]) => c > 0)
+     .map(([v, l, c, sev]) => `<button class="pill pill-${sev}" data-cat="license" data-val="${v}">${l}<span class="pill-count">${c}</span></button>`).join('')
+  );
+
   document.getElementById('filter-panel').innerHTML = `
     <div class="filter-row"><span class="filter-row-label credentials">Credentials</span>${credPills}</div>
     <div class="filter-row"><span class="filter-row-label source">Source</span>${srcPills}</div>
@@ -596,6 +635,7 @@ async function init() {
     <div class="filter-row"><span class="filter-row-label description">Description</span>${qualPills}</div>
     <div class="filter-row"><span class="filter-row-label activity">Activity</span>${actPills}</div>
     <div class="filter-row"><span class="filter-row-label popularity">Popularity</span>${popPills}</div>
+    <div class="filter-row"><span class="filter-row-label license">License</span>${licPills}</div>
   `;
 
   // Wire up all pills
