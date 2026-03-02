@@ -1,9 +1,9 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-03-01T18:44:25.332017Z",
-  "server_count": 2830,
-  "servers_with_repo": 2383,
-  "servers_with_packages": 1902,
+  "generated_at": "2026-03-02T16:56:17.431978Z",
+  "server_count": 2889,
+  "servers_with_repo": 2436,
+  "servers_with_packages": 1943,
   "score_distribution": [
     {
       "label": "High Trust",
@@ -15,19 +15,19 @@
       "label": "Moderate Trust",
       "min_score": 60,
       "max_score": 79,
-      "count": 506
+      "count": 510
     },
     {
       "label": "Low Trust",
       "min_score": 40,
       "max_score": 59,
-      "count": 1597
+      "count": 1642
     },
     {
       "label": "Very Low Trust",
       "min_score": 20,
       "max_score": 39,
-      "count": 690
+      "count": 700
     },
     {
       "label": "Unknown/Suspicious",
@@ -37,10 +37,10 @@
     }
   ],
   "flag_summary": {
-    "TEMPLATE_DESCRIPTION": 539,
-    "NO_SOURCE": 315,
+    "TEMPLATE_DESCRIPTION": 548,
+    "NO_SOURCE": 318,
+    "SENSITIVE_CRED_REQUEST": 54,
     "DESCRIPTION_DUPLICATE": 52,
-    "SENSITIVE_CRED_REQUEST": 51,
     "DEAD_ENTRY": 32,
     "HIGH_SECRET_DEMAND": 26,
     "REPO_ARCHIVED": 15,
