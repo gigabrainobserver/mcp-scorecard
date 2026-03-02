@@ -11,12 +11,21 @@ const SUPABASE_ANON_KEY = 'sb_publishable_A9V4liX4mxR2vkqTComCfg_ZfDIQMoF';
  *   { servers: { "namespace/name": { trust_score, scores: {...}, signals, flags, badges, ... } } }
  */
 async function fetchServers() {
-  const resp = await fetch(
-    `${SUPABASE_URL}/rest/v1/latest_scores?select=*`,
-    { headers: { 'apikey': SUPABASE_ANON_KEY } }
-  );
-  if (!resp.ok) throw new Error(`Supabase fetch failed: ${resp.status}`);
-  const rows = await resp.json();
+  // Paginate to get all rows (PostgREST defaults to 1000)
+  const rows = [];
+  const pageSize = 1000;
+  let offset = 0;
+  while (true) {
+    const resp = await fetch(
+      `${SUPABASE_URL}/rest/v1/latest_scores?select=*&limit=${pageSize}&offset=${offset}`,
+      { headers: { 'apikey': SUPABASE_ANON_KEY } }
+    );
+    if (!resp.ok) throw new Error(`Supabase fetch failed: ${resp.status}`);
+    const page = await resp.json();
+    rows.push(...page);
+    if (page.length < pageSize) break;
+    offset += pageSize;
+  }
 
   const servers = {};
   for (const row of rows) {
