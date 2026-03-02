@@ -15,3 +15,9 @@ output_refresh_*/
 # Internal docs — not for the site
 docs/
 CLAUDE.md
+vaults/
+
+# Infrastructure — never publish
+api-worker/
+db/api_keys.sql
+scripts/
