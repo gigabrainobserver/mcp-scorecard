@@ -11,3 +11,7 @@ data/
 # Working files — never publish
 drafts/
 output_refresh_*/
+
+# Internal docs — not for the site
+docs/
+CLAUDE.md

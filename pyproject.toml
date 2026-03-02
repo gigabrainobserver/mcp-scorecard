@@ -26,6 +26,9 @@ dependencies = [
     "pydantic>=2.0.0",
 ]
 
+[project.optional-dependencies]
+db = ["supabase>=2.0.0"]
+
 [project.urls]
 Homepage = "https://github.com/gigabrainobserver/mcp-scorecard"
 Repository = "https://github.com/gigabrainobserver/mcp-scorecard"

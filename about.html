@@ -126,6 +126,7 @@
   .footer-text a { color: #30363d; text-decoration: none; }
   .footer-text a:hover { color: #58a6ff; }
 </style>
+<script src="js/supabase.js"></script>
 </head>
 <body>
 
@@ -337,18 +338,10 @@
 
   <section>
     <h2>Data Access</h2>
-    <p>All data is freely available as static JSON. No API key required.</p>
+    <p>Server data is served from a Supabase Postgres database via REST API.</p>
     <div class="endpoint">
-      <span class="method">GET</span> <span class="url">output/index.json</span>
+      <span class="method">GET</span> <span class="url">latest_scores</span>
       <div class="desc">Per-server scores, signals, and flags for every server in the registry</div>
-    </div>
-    <div class="endpoint">
-      <span class="method">GET</span> <span class="url">output/stats.json</span>
-      <div class="desc">Ecosystem summary — score distribution, flag counts, top servers</div>
-    </div>
-    <div class="endpoint">
-      <span class="method">GET</span> <span class="url">output/flags.json</span>
-      <div class="desc">Servers grouped by flag type for quick lookup</div>
     </div>
   </section>
 
@@ -359,7 +352,7 @@
       <span style="color:#3fb950;">COLLECT</span> Registry API → 2,300+ servers<br>
       <span style="color:#58a6ff;">ENRICH</span>&nbsp; GitHub API → repo metadata, community profile, commit activity<br>
       <span style="color:#d29922;">SCORE</span>&nbsp;&nbsp; 4 categories × every server + red flag detection<br>
-      <span style="color:#f0883e;">PUBLISH</span> Static JSON → index.json, stats.json, flags.json
+      <span style="color:#f0883e;">PUBLISH</span> Supabase Postgres → scored data served via REST API
     </div>
   </section>
 
@@ -373,20 +366,28 @@
 <script>
 async function loadStats() {
   try {
-    const resp = await fetch('./output/stats.json');
-    const s = await resp.json();
-    document.getElementById('s-servers').textContent = s.server_count.toLocaleString();
-    const flagged = Object.values(s.flag_summary).reduce((a, b) => a + b, 0);
-    document.getElementById('s-flags').textContent = flagged.toLocaleString();
+    const data = await fetchServers();
+    const entries = Object.entries(data.servers);
 
-    for (const [flag, count] of Object.entries(s.flag_summary)) {
+    document.getElementById('s-servers').textContent = entries.length.toLocaleString();
+
+    // Compute flag summary from server data
+    const flagSummary = {};
+    let totalFlags = 0;
+    for (const [, s] of entries) {
+      for (const f of s.flags) {
+        flagSummary[f] = (flagSummary[f] || 0) + 1;
+        totalFlags++;
+      }
+    }
+    document.getElementById('s-flags').textContent = totalFlags.toLocaleString();
+
+    for (const [flag, count] of Object.entries(flagSummary)) {
       const el = document.getElementById('fc-' + flag);
       if (el) el.textContent = count;
     }
 
-    const resp2 = await fetch('./output/index.json');
-    const data = await resp2.json();
-    const namespaces = new Set(Object.keys(data.servers).map(n => n.split('/')[0]));
+    const namespaces = new Set(entries.map(([n]) => n.split('/')[0]));
     document.getElementById('s-publishers').textContent = namespaces.size.toLocaleString();
   } catch (e) {}
 }

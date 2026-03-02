@@ -205,6 +205,7 @@
   .footer-text a { color: #30363d; text-decoration: none; }
   .footer-text a:hover { color: #58a6ff; }
 </style>
+<script src="js/supabase.js"></script>
 </head>
 <body>
 
@@ -456,11 +457,10 @@ function render() {
 }
 
 async function init() {
-  const resp = await fetch('./output/index.json');
-  const data = await resp.json();
+  const data = await fetchServers();
 
-  document.getElementById('generated').textContent = `Last Updated: ${new Date(data.generated_at).toLocaleDateString()}`;
-  document.getElementById('version').textContent = `v${data.version}`;
+  document.getElementById('generated').textContent = `Last Updated: ${new Date().toLocaleDateString()}`;
+  document.getElementById('version').textContent = '';
 
   allServers = Object.entries(data.servers);
 

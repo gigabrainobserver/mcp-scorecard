@@ -147,6 +147,7 @@
   .footer-text a { color: #30363d; text-decoration: none; }
   .footer-text a:hover { color: #58a6ff; }
 </style>
+<script src="js/supabase.js"></script>
 </head>
 <body>
 
@@ -281,8 +282,7 @@ async function init() {
 
   document.title = `${ns} — MCP Scorecard`;
 
-  const resp = await fetch('./output/index.json');
-  const data = await resp.json();
+  const data = await fetchServers();
 
   // Filter servers for this namespace
   const servers = Object.entries(data.servers)

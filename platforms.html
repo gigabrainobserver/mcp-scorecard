@@ -88,6 +88,7 @@
   .footer-text a { color: #30363d; text-decoration: none; }
   .footer-text a:hover { color: #58a6ff; }
 </style>
+<script src="js/supabase.js"></script>
 </head>
 <body>
 
@@ -188,8 +189,7 @@ function render() {
 }
 
 async function init() {
-  const resp = await fetch('./output/index.json');
-  const data = await resp.json();
+  const data = await fetchServers();
 
   const platMap = {};
   totalServers = Object.keys(data.servers).length;
