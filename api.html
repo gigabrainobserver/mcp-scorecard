@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP Scorecard — API</title>
+<meta name="description" content="Programmatic access to trust scores for every MCP server. Free tier included.">
+<meta property="og:title" content="MCP Scorecard — API">
+<meta property="og:description" content="Programmatic access to trust scores for every MCP server. Free tier included.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mcp-scorecard.ai/api.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MCP Scorecard — API">
+<meta name="twitter:description" content="Programmatic access to trust scores for every MCP server. Free tier included.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.6; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .header { padding: 24px 32px; border-bottom: 1px solid #21262d; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .header h1 { font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .header h1 a { color: #e6edf3; text-decoration: none; }
+  .header h1 a:hover { color: #58a6ff; text-decoration: none; }
+  .header .nav { display: flex; gap: 16px; font-size: 13px; }
+  .header .nav a { color: #7d8590; text-decoration: none; }
+  .header .nav a:hover { color: #58a6ff; text-decoration: none; }
+  .header .nav a.active { color: #e6edf3; font-weight: 600; }
+  .header .meta { font-size: 13px; color: #7d8590; display: flex; gap: 16px; margin-left: auto; align-items: center; }
+  .header .meta a:hover { text-decoration: underline; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* Hero */
+  .hero { padding: 80px 0 48px; text-align: center; }
+  .hero h1 { font-size: 40px; font-weight: 700; margin-bottom: 16px; }
+  .hero h1 span { color: #58a6ff; }
+  .hero .tagline { font-size: 20px; color: #7d8590; max-width: 600px; margin: 0 auto 12px; }
+  .hero .sub { font-size: 15px; color: #484f58; max-width: 500px; margin: 0 auto 36px; }
+  .hero .cta { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn { padding: 10px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; display: inline-block; }
+  .btn-primary { background: #58a6ff; color: #0d1117; }
+  .btn-primary:hover { background: #79b8ff; text-decoration: none; }
+  .btn-secondary { background: #21262d; color: #e6edf3; border: 1px solid #30363d; }
+  .btn-secondary:hover { background: #30363d; text-decoration: none; }
+
+  /* Sections */
+  section { margin-bottom: 56px; }
+  section h2 { font-size: 24px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #21262d; }
+  section h3 { font-size: 16px; font-weight: 600; margin: 20px 0 8px; }
+  section p { color: #b1bac4; margin-bottom: 14px; font-size: 15px; }
+  section p strong { color: #e6edf3; }
+
+  /* Endpoint blocks */
+  .endpoint { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; margin: 12px 0; font-family: monospace; }
+  .endpoint .method { color: #3fb950; font-weight: 700; }
+  .endpoint .url { color: #e6edf3; font-size: 14px; word-break: break-all; }
+  .endpoint .desc { color: #7d8590; font-size: 13px; margin-top: 4px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+
+  /* Code blocks */
+  .code-block { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 16px; font-family: monospace; font-size: 13px; color: #e6edf3; overflow-x: auto; margin: 12px 0; line-height: 1.6; white-space: pre; }
+  .code-block .cm { color: #484f58; }
+  .code-block .str { color: #a5d6ff; }
+  .code-block .key { color: #7ee787; }
+  .code-block .num { color: #f0883e; }
+
+  /* Param tables */
+  .param-table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; }
+  .param-table th, .param-table td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #21262d; }
+  .param-table th { font-size: 12px; color: #7d8590; text-transform: uppercase; font-weight: 600; }
+  .param-table td { font-size: 14px; }
+  .param-table .param-name { font-weight: 600; color: #e6edf3; font-family: monospace; font-size: 13px; }
+  .param-table .param-type { color: #7d8590; font-family: monospace; font-size: 12px; }
+  .param-table .param-desc { color: #b1bac4; font-size: 13px; }
+
+  /* Tier grid */
+  .tier-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 20px 0; }
+  .tier-card { background: #161b22; border: 1px solid #21262d; border-radius: 12px; padding: 28px; display: flex; flex-direction: column; }
+  .tier-card.pro { border-color: #58a6ff; }
+  .tier-label { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 4px; margin-bottom: 12px; width: fit-content; }
+  .tier-label.free { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .tier-label.pro { background: rgba(88,166,255,0.15); color: #58a6ff; }
+  .tier-card h4 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .tier-card .tier-price { font-size: 14px; color: #7d8590; margin-bottom: 16px; }
+  .tier-card ul { list-style: none; padding: 0; margin: 0; flex: 1; }
+  .tier-card ul li { font-size: 14px; color: #b1bac4; padding: 6px 0; border-bottom: 1px solid #21262d; }
+  .tier-card ul li:last-child { border-bottom: none; }
+  .tier-card ul li::before { content: "✓ "; color: #3fb950; font-weight: 700; }
+  .tier-card .tier-cta { margin-top: 20px; text-align: center; }
+  .tier-card .tier-cta .btn { width: 100%; text-align: center; }
+  @media (max-width: 640px) { .tier-grid { grid-template-columns: 1fr; } }
+
+  /* Key form */
+  .key-form { margin-top: 16px; }
+  .key-form input, .key-form select { width: 100%; padding: 8px 12px; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: #e6edf3; font-size: 14px; margin-bottom: 8px; }
+  .key-form input::placeholder { color: #484f58; }
+  .key-form select { appearance: none; cursor: pointer; }
+  .key-form .form-error { color: #f85149; font-size: 13px; margin-bottom: 8px; display: none; }
+  .key-result { background: #0d1117; border: 1px solid #3fb950; border-radius: 8px; padding: 16px; margin-top: 16px; }
+  .key-result .key-value { font-family: monospace; font-size: 14px; color: #3fb950; word-break: break-all; user-select: all; padding: 8px; background: #161b22; border-radius: 4px; margin: 8px 0; }
+  .key-result .key-warning { font-size: 12px; color: #d29922; }
+
+  /* Use case grid */
+  .use-cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+  .use-case { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 20px; }
+  .use-case h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; color: #e6edf3; }
+  .use-case p { font-size: 13px; color: #7d8590; margin: 0; }
+
+  /* Manifesto callout */
+  .manifesto { background: #161b22; border: 1px solid #21262d; border-radius: 12px; padding: 32px; margin: 32px 0; text-align: center; }
+  .manifesto p { font-size: 20px; color: #e6edf3; font-weight: 600; line-height: 1.5; margin: 0; }
+  .manifesto p span { color: #58a6ff; }
+
+  /* Footer */
+  footer { padding: 32px 0 24px; text-align: center; margin-top: 40px; }
+  .footer-squig { color: #21262d; font-size: 14px; letter-spacing: 4px; margin-bottom: 10px; }
+  .footer-text { font-size: 12px; color: #30363d; }
+  .footer-text a { color: #30363d; text-decoration: none; }
+  .footer-text a:hover { color: #58a6ff; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><a href="./">MCP Scorecard</a></h1>
+  <div class="nav">
+    <a href="./">Servers</a>
+    <a href="publishers.html">Publishers</a>
+    <a href="platforms.html">Platforms</a>
+    <a href="blog.html">Blog</a>
+    <a href="api.html" class="active">API</a>
+  </div>
+  <div class="meta">
+    <a href="about.html" style="color:#58a6ff;font-weight:600;text-decoration:none;">Mission Statement</a>
+    <a href="https://github.com/gigabrainobserver/mcp-scorecard" style="color:#e6edf3;text-decoration:none;">GitHub</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="hero" style="padding-bottom:24px;">
+    <h1>Trust Data, <span>The Full Picture</span></h1>
+    <p class="tagline">Integrate MCP trust scores into your tools, agents, and workflows.</p>
+    <p class="sub" style="margin-bottom:0;">Free tier included. No credit card required.</p>
+  </div>
+
+  <!-- Rate Limits -->
+  <section id="tiers">
+    <h2>Get Access</h2>
+    <div class="tier-grid">
+      <div class="tier-card">
+        <span class="tier-label free">Free</span>
+        <h4>100 requests / day</h4>
+        <div class="tier-price">$0 forever</div>
+        <ul>
+          <li>All endpoints</li>
+          <li>Rate limit headers included</li>
+          <li>Personal projects &amp; evaluation</li>
+        </ul>
+        <div class="tier-cta" id="free-key-cta">
+          <div class="key-form" id="key-form">
+            <input type="email" id="key-email" placeholder="you@example.com" required>
+            <select id="key-use-case">
+              <option value="">How will you use the API?</option>
+              <option value="mcp_client">MCP client integration</option>
+              <option value="cicd">CI/CD pipeline</option>
+              <option value="security">Security dashboard</option>
+              <option value="ai_agent">AI agent</option>
+              <option value="research">Research / exploration</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="form-error" id="form-error"></div>
+            <button class="btn btn-secondary" style="width:100%" id="submit-key" onclick="provisionKey()">Get Free Key</button>
+          </div>
+          <div class="key-result" id="key-result" style="display:none">
+            <div style="font-size:13px;color:#b1bac4;margin-bottom:4px;">Your API key:</div>
+            <div class="key-value" id="key-value"></div>
+            <div class="key-warning">Save this now — it cannot be retrieved again.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tier-card pro">
+        <span class="tier-label pro">Pro</span>
+        <h4>10,000 requests / day</h4>
+        <div class="tier-price">Coming soon</div>
+        <ul>
+          <li>All endpoints</li>
+          <li>Rate limit headers included</li>
+          <li>Personal projects &amp; evaluation</li>
+          <li>Production integrations &amp; SaaS</li>
+          <li>Bulk server lookups</li>
+          <li>Score change notifications</li>
+          <li>Priority support</li>
+        </ul>
+        <div class="tier-cta">
+          <span class="btn btn-primary" style="opacity:0.5;cursor:default;">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start -->
+  <section>
+    <h2>Quick Start</h2>
+
+    <h3>REST API</h3>
+    <p>Base URL for all API requests:</p>
+    <div class="code-block">https://api.mcp-scorecard.ai/v1</div>
+    <p>Example request:</p>
+    <div class="code-block">curl -H <span class="str">"X-API-Key: your_key"</span> \
+  https://api.mcp-scorecard.ai/v1/stats</div>
+
+    <h3>MCP Server</h3>
+    <p>Give your AI agent direct access to trust scores. The <strong>mcp-scorecard-server</strong> package wraps this API as an MCP tool — no HTTP calls needed in your code.</p>
+    <p>Add to your Claude Code config (<strong>.mcp.json</strong>):</p>
+    <div class="code-block">{
+  <span class="key">"mcpServers"</span>: {
+    <span class="key">"mcp-scorecard"</span>: {
+      <span class="key">"command"</span>: <span class="str">"uvx"</span>,
+      <span class="key">"args"</span>: [<span class="str">"mcp-scorecard-server"</span>],
+      <span class="key">"env"</span>: {
+        <span class="key">"SCORECARD_API_KEY"</span>: <span class="str">"your_key"</span>
+      }
+    }
+  }
+}</div>
+    <p>Available tools:</p>
+    <table class="param-table">
+      <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="param-name">check_server_trust</td><td class="param-desc">Look up trust score, flags, and install info for a specific server</td></tr>
+        <tr><td class="param-name">search_servers</td><td class="param-desc">Search servers by keyword (min 2 chars)</td></tr>
+        <tr><td class="param-name">list_servers</td><td class="param-desc">Browse and filter servers by score, flags, platform, or namespace</td></tr>
+        <tr><td class="param-name">get_ecosystem_stats</td><td class="param-desc">Aggregate stats — total servers, score distribution, flag summary</td></tr>
+      </tbody>
+    </table>
+    <p>Works with any MCP-compatible client — Claude Code, Cursor, Windsurf, or your own agent.</p>
+  </section>
+
+  <!-- Authentication -->
+  <section>
+    <h2>Authentication</h2>
+    <p>All endpoints except <strong>/v1/health</strong> require an API key passed via the <strong>X-API-Key</strong> header.</p>
+    <div class="code-block"><span class="cm"># Authenticated request</span>
+curl -H <span class="str">"X-API-Key: sk_your_key_here"</span> \
+  https://api.mcp-scorecard.ai/v1/servers
+
+<span class="cm"># Health check (no auth needed)</span>
+curl https://api.mcp-scorecard.ai/v1/health</div>
+    <p>Invalid or missing keys return <strong>401 Unauthorized</strong>.</p>
+  </section>
+
+  <!-- Endpoints -->
+  <section>
+    <h2>Endpoints</h2>
+
+    <!-- Health -->
+    <h3>Health Check</h3>
+    <div class="endpoint">
+      <span class="method">GET</span> <span class="url">/v1/health</span>
+      <div class="desc">Service status. No authentication required.</div>
+    </div>
+    <div class="code-block">{
+  <span class="key">"data"</span>: { <span class="key">"status"</span>: <span class="str">"ok"</span>, <span class="key">"timestamp"</span>: <span class="str">"2026-03-02T12:00:00.000Z"</span> },
+  <span class="key">"meta"</span>: { <span class="key">"cached"</span>: false }
+}</div>
+
+    <!-- Stats -->
+    <h3>Ecosystem Statistics</h3>
+    <div class="endpoint">
+      <span class="method">GET</span> <span class="url">/v1/stats</span>
+      <div class="desc">Aggregate statistics across all scored servers.</div>
+    </div>
+    <div class="code-block">{
+  <span class="key">"data"</span>: {
+    <span class="key">"total_servers"</span>: <span class="num">2889</span>,
+    <span class="key">"average_score"</span>: <span class="num">42.3</span>,
+    <span class="key">"median_score"</span>: <span class="num">40</span>,
+    <span class="key">"score_distribution"</span>: { <span class="str">"High Trust"</span>: <span class="num">312</span>, <span class="str">"Moderate Trust"</span>: <span class="num">891</span>, ... },
+    <span class="key">"flag_summary"</span>: { <span class="str">"NO_SOURCE"</span>: <span class="num">234</span>, <span class="str">"DEAD_ENTRY"</span>: <span class="num">156</span>, ... },
+    <span class="key">"verified_publishers"</span>: <span class="num">48</span>
+  },
+  <span class="key">"meta"</span>: { <span class="key">"cached"</span>: false }
+}</div>
+
+    <!-- List Servers -->
+    <h3>List Servers</h3>
+    <div class="endpoint">
+      <span class="method">GET</span> <span class="url">/v1/servers</span>
+      <div class="desc">List and filter servers. Paginated.</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="param-name">limit</td><td class="param-type">int</td><td class="param-desc">Results per page. 1–200, default 50.</td></tr>
+        <tr><td class="param-name">offset</td><td class="param-type">int</td><td class="param-desc">Pagination offset. Default 0.</td></tr>
+        <tr><td class="param-name">sort</td><td class="param-type">string</td><td class="param-desc">Sort field: trust_score, name, namespace, provenance, maintenance, popularity, permissions, scored_at.</td></tr>
+        <tr><td class="param-name">order</td><td class="param-type">string</td><td class="param-desc">Sort direction: asc or desc. Default desc.</td></tr>
+        <tr><td class="param-name">min_score</td><td class="param-type">int</td><td class="param-desc">Filter by minimum trust score.</td></tr>
+        <tr><td class="param-name">flags</td><td class="param-type">string</td><td class="param-desc">Filter by flag name, e.g. SENSITIVE_CRED_REQUEST.</td></tr>
+        <tr><td class="param-name">target</td><td class="param-type">string</td><td class="param-desc">Filter by platform target, e.g. PostgreSQL.</td></tr>
+        <tr><td class="param-name">namespace</td><td class="param-type">string</td><td class="param-desc">Filter by publisher namespace.</td></tr>
+      </tbody>
+    </table>
+    <div class="code-block"><span class="cm"># Top 10 high-trust servers</span>
+curl -H <span class="str">"X-API-Key: your_key"</span> \
+  <span class="str">"https://api.mcp-scorecard.ai/v1/servers?min_score=80&limit=10"</span></div>
+
+    <!-- Get Server -->
+    <h3>Get Server</h3>
+    <div class="endpoint">
+      <span class="method">GET</span> <span class="url">/v1/servers/:namespace/:id</span>
+      <div class="desc">Detailed trust data for a single server.</div>
+    </div>
+    <div class="code-block"><span class="cm"># Look up a specific server</span>
+curl -H <span class="str">"X-API-Key: your_key"</span> \
+  https://api.mcp-scorecard.ai/v1/servers/io.github.pgEdge/postgres-mcp</div>
+    <div class="code-block">{
+  <span class="key">"data"</span>: {
+    <span class="key">"name"</span>: <span class="str">"io.github.pgEdge/postgres-mcp"</span>,
+    <span class="key">"trust_score"</span>: <span class="num">68</span>,
+    <span class="key">"trust_label"</span>: <span class="str">"Moderate Trust"</span>,
+    <span class="key">"scores"</span>: { <span class="key">"provenance"</span>: <span class="num">75</span>, <span class="key">"maintenance"</span>: <span class="num">67</span>, <span class="key">"popularity"</span>: <span class="num">26</span>, <span class="key">"permissions"</span>: <span class="num">95</span> },
+    <span class="key">"flags"</span>: [],
+    <span class="key">"badges"</span>: [],
+    <span class="key">"verified_publisher"</span>: false,
+    <span class="key">"targets"</span>: [<span class="str">"PostgreSQL"</span>],
+    <span class="key">"scored_at"</span>: <span class="str">"2026-03-02T08:00:00Z"</span>,
+    <span class="key">"install"</span>: {
+      <span class="key">"repo_url"</span>: <span class="str">"https://github.com/pgEdge/pgedge-postgres-mcp"</span>,
+      <span class="key">"version"</span>: <span class="str">"1.0.0"</span>,
+      <span class="key">"package_types"</span>: [<span class="str">"docker"</span>],
+      <span class="key">"transport_types"</span>: [<span class="str">"stdio"</span>]
+    }
+  },
+  <span class="key">"meta"</span>: { <span class="key">"cached"</span>: false }
+}</div>
+
+    <!-- Search -->
+    <h3>Search</h3>
+    <div class="endpoint">
+      <span class="method">GET</span> <span class="url">/v1/search?q=</span>
+      <div class="desc">Search servers by name. Minimum 2 characters.</div>
+    </div>
+    <table class="param-table">
+      <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="param-name">q</td><td class="param-type">string</td><td class="param-desc">Search query. Required, min 2 characters.</td></tr>
+        <tr><td class="param-name">limit</td><td class="param-type">int</td><td class="param-desc">Max results. 1–200, default 20.</td></tr>
+      </tbody>
+    </table>
+    <div class="code-block">curl -H <span class="str">"X-API-Key: your_key"</span> \
+  <span class="str">"https://api.mcp-scorecard.ai/v1/search?q=postgres"</span></div>
+  </section>
+
+  <!-- Rate Limit Headers -->
+  <section>
+    <h2>Rate Limits</h2>
+    <p>Rate limits reset daily at midnight UTC. Every response includes headers to track your usage:</p>
+    <div class="code-block"><span class="key">X-RateLimit-Limit</span>: 100        <span class="cm"># Your daily limit</span>
+<span class="key">X-RateLimit-Remaining</span>: 87   <span class="cm"># Requests left today</span>
+<span class="key">X-RateLimit-Reset</span>: 1709424000 <span class="cm"># UTC midnight epoch</span></div>
+    <p>When you exceed your limit, the API returns <strong>429 Too Many Requests</strong> with a <strong>Retry-After</strong> header indicating seconds until reset.</p>
+  </section>
+
+  <!-- Response Format -->
+  <section>
+    <h2>Response Format</h2>
+    <p>All responses use a standard envelope:</p>
+    <div class="code-block">{
+  <span class="key">"data"</span>: { ... },     <span class="cm"># The response payload</span>
+  <span class="key">"meta"</span>: {             <span class="cm"># Request metadata</span>
+    <span class="key">"cached"</span>: true,     <span class="cm"># Whether this was a cache hit</span>
+    <span class="key">"total"</span>: <span class="num">2889</span>,      <span class="cm"># Total matching records (list endpoints)</span>
+    <span class="key">"limit"</span>: <span class="num">50</span>,        <span class="cm"># Page size</span>
+    <span class="key">"offset"</span>: <span class="num">0</span>         <span class="cm"># Current offset</span>
+  }
+}</div>
+    <p>Responses may be cached for up to <strong>1 hour</strong>. The <strong>meta.cached</strong> field indicates a cache hit. CORS is enabled for all origins.</p>
+  </section>
+
+  <!-- Errors -->
+  <section>
+    <h2>Errors</h2>
+    <p>Errors follow a consistent format:</p>
+    <div class="code-block">{
+  <span class="key">"error"</span>: {
+    <span class="key">"message"</span>: <span class="str">"Rate limit exceeded"</span>,
+    <span class="key">"status"</span>: <span class="num">429</span>
+  }
+}</div>
+    <table class="param-table">
+      <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td class="param-name">400</td><td class="param-desc">Bad request — missing or invalid parameters</td></tr>
+        <tr><td class="param-name">401</td><td class="param-desc">Unauthorized — missing or invalid API key</td></tr>
+        <tr><td class="param-name">404</td><td class="param-desc">Not found — server or route doesn't exist</td></tr>
+        <tr><td class="param-name">429</td><td class="param-desc">Rate limit exceeded — wait for reset</td></tr>
+        <tr><td class="param-name">502</td><td class="param-desc">Upstream error — Supabase is unreachable</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Use Cases -->
+  <section>
+    <h2>Use Cases</h2>
+    <div class="use-cases">
+      <div class="use-case">
+        <h4>MCP Clients</h4>
+        <p>Check trust scores before granting a server access to credentials.</p>
+      </div>
+      <div class="use-case">
+        <h4>CI/CD Pipelines</h4>
+        <p>Gate MCP server additions on minimum trust thresholds.</p>
+      </div>
+      <div class="use-case">
+        <h4>Security Dashboards</h4>
+        <p>Monitor trust signals across your fleet of MCP servers.</p>
+      </div>
+      <div class="use-case">
+        <h4>AI Agents</h4>
+        <p>Evaluate server trust programmatically before tool selection.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-squig">~ ~ ~</div>
+  <div class="footer-text"><a href="https://gigabrain.observer">gigabrain.observer</a> &nbsp;&middot;&nbsp; <a href="privacy.html">2026</a></div>
+</footer>
+
+<script>
+async function provisionKey() {
+  const btn = document.getElementById('submit-key');
+  const errEl = document.getElementById('form-error');
+  const email = document.getElementById('key-email').value.trim();
+  const useCase = document.getElementById('key-use-case').value;
+
+  errEl.style.display = 'none';
+  errEl.textContent = '';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = 'Please enter a valid email address.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  try {
+    const res = await fetch('https://api.mcp-scorecard.ai/v1/keys', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, use_case: useCase }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      errEl.textContent = data.error?.message || 'Something went wrong.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Get Free Key';
+      return;
+    }
+
+    document.getElementById('key-form').style.display = 'none';
+    document.getElementById('key-result').style.display = 'block';
+    document.getElementById('key-value').textContent = data.data.api_key;
+  } catch (e) {
+    errEl.textContent = 'Network error. Please try again.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Get Free Key';
+  }
+}
+</script>
+</body>
+</html>
