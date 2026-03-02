@@ -28,6 +28,21 @@ class BadgeGroups(BaseModel):
     popularity: PopularityMetrics = Field(default_factory=PopularityMetrics)
 
 
+class EnvVarInfo(BaseModel):
+    name: str
+    is_required: bool = False
+    is_secret: bool = False
+
+
+class InstallInfo(BaseModel):
+    repo_url: str | None = None
+    version: str | None = None
+    package_types: list[str] = Field(default_factory=list)
+    package_identifiers: list[str] = Field(default_factory=list)
+    transport_types: list[str] = Field(default_factory=list)
+    env_vars: list[EnvVarInfo] = Field(default_factory=list)
+
+
 class ServerScore(BaseModel):
     trust_score: int = Field(ge=0, le=100)
     trust_label: str
@@ -37,6 +52,7 @@ class ServerScore(BaseModel):
     badges: BadgeGroups = Field(default_factory=BadgeGroups)
     verified_publisher: bool = False
     targets: list[str] = Field(default_factory=list)
+    install: InstallInfo = Field(default_factory=InstallInfo)
 
 
 class CategoryScores(BaseModel):

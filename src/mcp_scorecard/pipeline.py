@@ -65,6 +65,14 @@ async def run(output_dir: str | None = None) -> None:
         flags = detect_flags(server, gh, flag_context)
         result = calculate_scores(server, gh, flags=flags)
         result["flags"] = flags
+        result["install"] = {
+            "repo_url": server.get("repo_url"),
+            "version": server.get("version"),
+            "package_types": server.get("package_types", []),
+            "package_identifiers": server.get("package_identifiers", []),
+            "transport_types": server.get("transport_types", []),
+            "env_vars": server.get("env_vars", []),
+        }
         scored[name] = result
 
     flagged = sum(1 for s in scored.values() if s["flags"])

@@ -16,6 +16,7 @@ from mcp_scorecard.output.models import (
     CategoryScores,
     FlagGroup,
     FlagsIndex,
+    InstallInfo,
     PopularityMetrics,
     ScoreBand,
     ScorecardIndex,
@@ -59,6 +60,10 @@ def _build_index(
             popularity=PopularityMetrics(**raw_badges.get("popularity", {})),
         )
         ns = name.split("/")[0] if "/" in name else ""
+        # Build install info from pipeline data
+        raw_install = data.get("install", {})
+        install = InstallInfo(**raw_install) if raw_install else InstallInfo()
+
         servers[name] = ServerScore(
             trust_score=data["trust_score"],
             trust_label=data["trust_label"],
@@ -68,6 +73,7 @@ def _build_index(
             badges=badge_groups,
             verified_publisher=ns in VERIFIED_PUBLISHERS,
             targets=infer_targets(name),
+            install=install,
         )
     return ScorecardIndex(
         generated_at=now,

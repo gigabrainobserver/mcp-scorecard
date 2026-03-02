@@ -165,9 +165,17 @@ SELECT DISTINCT ON (ss.server_id)
     ss.verified_publisher,
     ss.targets,
     ss.scored_at,
-    ss.run_id
+    ss.run_id,
+    -- Install data from registry
+    re.repo_url,
+    re.version,
+    re.package_types,
+    re.package_identifiers,
+    re.transport_types,
+    re.env_vars
 FROM score_snapshots ss
 JOIN servers s ON s.id = ss.server_id
+LEFT JOIN registry_entries re ON re.server_id = s.id
 ORDER BY ss.server_id, ss.scored_at DESC;
 
 CREATE UNIQUE INDEX idx_latest_server_uuid ON latest_scores(server_uuid);

@@ -296,7 +296,7 @@ function renderRow(name, s, idx) {
   const id = parts.slice(1).join('/');
   const badges = s.badges || {};
   const pop = badges.popularity || {};
-  const repoUrl = s.signals?.repo_url || null;
+  const repoUrl = s.install?.repo_url || s.signals?.repo_url || null;
   const linkIcon = repoUrl
     ? `<a class="row-link" href="${repoUrl}" target="_blank" rel="noopener" title="${repoUrl}" onclick="event.stopPropagation()"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"/></svg></a>`
     : '';
@@ -338,6 +338,46 @@ function renderRow(name, s, idx) {
         ${pop.watchers > 0 ? `<span>&#9737; <span class="val">${fmtNum(pop.watchers)}</span> watchers</span>` : ''}
       </div>` : '';
 
+  // Install info
+  const install = s.install || {};
+  const pkgTypes = install.package_types || [];
+  const pkgIds = install.package_identifiers || [];
+  const transports = install.transport_types || [];
+  const envVars = install.env_vars || [];
+  const version = install.version;
+  let installHtml = '';
+  if (pkgTypes.length > 0 || transports.length > 0 || envVars.length > 0) {
+    let parts = [];
+    for (let i = 0; i < pkgTypes.length; i++) {
+      const ptype = pkgTypes[i];
+      const pid = pkgIds[i] || '';
+      if (ptype === 'npm') {
+        parts.push(`<span class="badge badge-enum-good" title="Click to copy" style="cursor:pointer" onclick="event.stopPropagation();navigator.clipboard.writeText('npx -y ${pid}');this.textContent='Copied!';setTimeout(()=>this.textContent='npm: npx -y ${pid}',1000)">npm: npx -y ${pid}</span>`);
+      } else if (ptype === 'pypi') {
+        parts.push(`<span class="badge badge-enum-good" title="Click to copy" style="cursor:pointer" onclick="event.stopPropagation();navigator.clipboard.writeText('uvx ${pid}');this.textContent='Copied!';setTimeout(()=>this.textContent='pypi: uvx ${pid}',1000)">pypi: uvx ${pid}</span>`);
+      } else {
+        parts.push(`<span class="badge badge-enum-neutral">${ptype}: ${pid}</span>`);
+      }
+    }
+    for (const t of transports) {
+      const lvl = t === 'stdio' ? 'good' : 'neutral';
+      parts.push(`<span class="badge badge-enum-${lvl}">${t}</span>`);
+    }
+    if (version) {
+      parts.push(`<span class="badge badge-enum-neutral">v${version}</span>`);
+    }
+    installHtml = `<div class="badge-group"><span class="badge-group-label">Install</span><div class="badge-row">${parts.join('')}</div></div>`;
+    if (envVars.length > 0) {
+      const evBadges = envVars.map(ev => {
+        const req = ev.is_required ? 'required' : 'optional';
+        const sec = ev.is_secret ? ', secret' : '';
+        const lvl = ev.is_secret && ev.is_required ? 'warning' : (ev.is_required ? 'neutral' : 'good');
+        return `<span class="badge badge-enum-${lvl}" title="${req}${sec}">${ev.name}</span>`;
+      }).join('');
+      installHtml += `<div class="badge-group"><span class="badge-group-label">Env Vars</span><div class="badge-row">${evBadges}</div></div>`;
+    }
+  }
+
   return `<div class="row" data-idx="${idx}" onclick="toggleDetail(${idx})">
       <span class="row-chevron">&#9654;</span>
       <span class="score-pill score-${cls}">${s.trust_score}</span>
@@ -351,6 +391,7 @@ function renderRow(name, s, idx) {
       <div class="badge-group"><span class="badge-group-label">Provenance</span><div class="badge-row">${provBadges}</div></div>
       <div class="badge-group"><span class="badge-group-label">Activity</span><div class="badge-row">${actBadges}</div></div>
       ${detailPop}
+      ${installHtml}
     </div>`;
 }
 

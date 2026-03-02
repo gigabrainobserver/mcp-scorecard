@@ -43,6 +43,14 @@ async function fetchServers() {
       badges: row.badges || {},
       verified_publisher: row.verified_publisher || false,
       targets: row.targets || [],
+      install: {
+        repo_url: row.repo_url || null,
+        version: row.version || null,
+        package_types: row.package_types || [],
+        package_identifiers: row.package_identifiers || [],
+        transport_types: row.transport_types || [],
+        env_vars: row.env_vars || [],
+      },
     };
   }
   return { servers, server_count: rows.length };
