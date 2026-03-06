@@ -1,33 +1,33 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-03-02T16:56:17.431978Z",
-  "server_count": 2889,
-  "servers_with_repo": 2436,
-  "servers_with_packages": 1943,
+  "generated_at": "2026-03-06T08:25:25.135075Z",
+  "server_count": 3121,
+  "servers_with_repo": 2647,
+  "servers_with_packages": 2121,
   "score_distribution": [
     {
       "label": "High Trust",
       "min_score": 80,
       "max_score": 100,
-      "count": 33
+      "count": 34
     },
     {
       "label": "Moderate Trust",
       "min_score": 60,
       "max_score": 79,
-      "count": 510
+      "count": 527
     },
     {
       "label": "Low Trust",
       "min_score": 40,
       "max_score": 59,
-      "count": 1642
+      "count": 1810
     },
     {
       "label": "Very Low Trust",
       "min_score": 20,
       "max_score": 39,
-      "count": 700
+      "count": 746
     },
     {
       "label": "Unknown/Suspicious",
@@ -37,14 +37,14 @@
     }
   ],
   "flag_summary": {
-    "TEMPLATE_DESCRIPTION": 548,
-    "NO_SOURCE": 318,
-    "SENSITIVE_CRED_REQUEST": 54,
+    "TEMPLATE_DESCRIPTION": 585,
+    "NO_SOURCE": 336,
+    "SENSITIVE_CRED_REQUEST": 65,
     "DESCRIPTION_DUPLICATE": 52,
     "DEAD_ENTRY": 32,
-    "HIGH_SECRET_DEMAND": 26,
+    "HIGH_SECRET_DEMAND": 30,
     "REPO_ARCHIVED": 15,
-    "STAGING_ARTIFACT": 13
+    "STAGING_ARTIFACT": 12
   },
   "top_servers": [
     {
@@ -118,6 +118,11 @@
       "trust_label": "High Trust"
     },
     {
+      "name": "io.github.kubeshark/mcp",
+      "trust_score": 84,
+      "trust_label": "High Trust"
+    },
+    {
       "name": "io.github.nrwl/nx-console",
       "trust_score": 84,
       "trust_label": "High Trust"
@@ -165,11 +170,6 @@
     {
       "name": "io.github.wonderwhy-er/desktop-commander",
       "trust_score": 82,
-      "trust_label": "High Trust"
-    },
-    {
-      "name": "io.github.CursorTouch/Windows-MCP",
-      "trust_score": 81,
       "trust_label": "High Trust"
     }
   ],
