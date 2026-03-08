@@ -609,18 +609,30 @@ def generate_platforms_page(
 # ── Blog index ──────────────────────────────────────────
 
 BLOG_INDEX_CSS = """
-  .blog-hero { padding: 32px 32px 24px; border-bottom: 1px solid #21262d; }
-  .blog-hero h2 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-  .blog-hero p { font-size: 14px; color: #7d8590; }
-  .blog-list { max-width: 800px; margin: 0 auto; padding: 24px; }
-  .blog-card { display: block; padding: 20px 0; border-bottom: 1px solid #21262d; text-decoration: none; }
-  .blog-card:hover { text-decoration: none; }
-  .blog-card:hover .blog-card-title { color: #58a6ff; }
-  .blog-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .blog-card-date { font-size: 12px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; }
-  .blog-card-title { font-size: 18px; font-weight: 600; color: #e6edf3; transition: color 0.15s; }
-  .blog-card-summary { font-size: 14px; color: #8b949e; margin-top: 6px; line-height: 1.5; }
-  .tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .layout { display: flex; max-width: 1000px; margin: 0 auto; padding: 0 24px; gap: 48px; }
+  .main { flex: 1; min-width: 0; padding: 48px 0; }
+  .main h2 { font-size: 28px; font-weight: 700; margin-bottom: 32px; }
+  .sidebar { width: 220px; flex-shrink: 0; padding: 48px 0; border-left: 1px solid #21262d; padding-left: 24px; }
+  .sb-section { margin-bottom: 28px; }
+  .sb-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #484f58; margin-bottom: 10px; }
+  .sb-item { display: block; font-size: 13px; color: #7d8590; padding: 3px 0; text-decoration: none; }
+  .sb-item:hover { color: #58a6ff; text-decoration: none; }
+  .sb-count { float: right; color: #484f58; font-size: 12px; }
+  .sb-tag { display: inline-flex; align-items: center; gap: 6px; }
+  .sb-tag .tag { font-size: 10px; padding: 1px 6px; }
+  .sb-pub { font-family: monospace; font-size: 12px; }
+  .post-card { border-bottom: 1px solid #21262d; padding: 24px 0; }
+  .post-card:first-of-type { padding-top: 0; }
+  .post-card:last-of-type { border-bottom: none; }
+  .post-date { font-size: 12px; color: #7d8590; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .post-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  .post-title a { color: #e6edf3; }
+  .post-title a:hover { color: #58a6ff; text-decoration: none; }
+  .post-summary { font-size: 15px; color: #7d8590; line-height: 1.5; }
+  .post-pubs { margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap; }
+  .post-pub { font-size: 10px; padding: 1px 6px; border-radius: 3px; background: rgba(88,166,255,0.08); color: #58a6ff; font-family: monospace; text-decoration: none; }
+  .post-pub:hover { background: rgba(88,166,255,0.18); text-decoration: none; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
   .tag-pulse { background: rgba(88,166,255,0.15); color: #58a6ff; }
   .tag-spotlight { background: rgba(63,185,80,0.15); color: #3fb950; }
   .tag-trend { background: rgba(210,153,34,0.15); color: #d29922; }
@@ -628,23 +640,86 @@ BLOG_INDEX_CSS = """
   .tag-interview { background: rgba(163,113,247,0.15); color: #a371f7; }
   .tag-comparison { background: rgba(88,166,255,0.15); color: #58a6ff; }
   .tag-incident { background: rgba(248,81,73,0.15); color: #f85149; }
-  .blog-pubs { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
-  .blog-pub { font-size: 10px; padding: 1px 5px; border-radius: 3px; background: rgba(88,166,255,0.08); color: #58a6ff; font-family: monospace; }
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; gap: 0; }
+    .sidebar { width: 100%; border-left: none; border-top: 1px solid #21262d; padding-left: 0; padding-top: 24px; }
+  }
 """
+
+
+def _build_blog_sidebar(posts: list[dict]) -> str:
+    """Build blog sidebar HTML with tag counts, archive, and publisher mentions."""
+    from datetime import datetime
+
+    # Tag counts
+    tag_counts: dict[str, int] = {}
+    pub_counts: dict[str, int] = {}
+    months: dict[str, int] = {}
+    for p in posts:
+        tag = p.get("tag", "")
+        if tag:
+            tag_counts[tag] = tag_counts.get(tag, 0) + 1
+        date = p.get("date", "")
+        if date:
+            m = date[:7]
+            months[m] = months.get(m, 0) + 1
+        for pub in p.get("publishers", []):
+            pub_counts[pub] = pub_counts.get(pub, 0) + 1
+
+    # Tags section
+    tag_order = ["Pulse", "Spotlight", "Trend", "Investigation", "Interview", "Comparison", "Incident"]
+    tags_html = ""
+    for t in tag_order:
+        if t in tag_counts:
+            t_lower = t.lower()
+            tags_html += (
+                f'<span class="sb-item"><span class="sb-tag">'
+                f'<span class="tag tag-{t_lower}">{html.escape(t)}</span></span>'
+                f'<span class="sb-count">{tag_counts[t]}</span></span>'
+            )
+
+    # Archive section
+    archive_html = ""
+    for m in sorted(months.keys(), reverse=True):
+        try:
+            dt = datetime.strptime(m + "-01", "%Y-%m-%d")
+            label = dt.strftime("%B %Y")
+        except ValueError:
+            label = m
+        archive_html += f'<span class="sb-item">{label}<span class="sb-count">{months[m]}</span></span>'
+
+    # Publishers mentioned section
+    sorted_pubs = sorted(pub_counts.items(), key=lambda x: x[1], reverse=True)[:12]
+    pub_html = ""
+    for pub, count in sorted_pubs:
+        pub_html += (
+            f'<a class="sb-item sb-pub" href="/publisher/{html.escape(pub)}/">'
+            f'{html.escape(pub)}<span class="sb-count">{count}</span></a>'
+        )
+
+    return (
+        '<div class="sidebar">'
+        '<div class="sb-section">'
+        '<div class="sb-label">Article Type</div>'
+        f'{tags_html}'
+        '</div>'
+        '<div class="sb-section">'
+        '<div class="sb-label">Archive</div>'
+        f'{archive_html}'
+        '</div>'
+        '<div class="sb-section">'
+        '<div class="sb-label">Publishers Mentioned</div>'
+        f'{pub_html}'
+        '</div>'
+        '</div>'
+    )
 
 
 def generate_blog_index(
     site_dir: Path,
     posts: list[dict],
 ) -> None:
-    """Generate /blog/ listing page."""
-    hero_html = (
-        '<div class="blog-hero">'
-        f'<h2>Blog ({len(posts)} posts)</h2>'
-        '<p>Analysis, spotlights, and ecosystem pulse reports on the MCP server landscape.</p>'
-        '</div>'
-    )
-
+    """Generate /blog/ listing page with sidebar."""
     cards = []
     for p in posts:
         slug = html.escape(p.get("slug", ""))
@@ -653,28 +728,32 @@ def generate_blog_index(
         summary = html.escape(p.get("summary", ""))
         tag = p.get("tag", "")
         tag_lower = tag.lower() if tag else ""
-        tag_html = f'<span class="tag tag-{tag_lower}">{html.escape(tag)}</span>' if tag else ""
+        tag_html = f'<span class="tag tag-{tag_lower}">{html.escape(tag)}</span> &nbsp;' if tag else ""
 
         pubs = p.get("publishers", [])
         pub_pills = "".join(
-            f'<span class="blog-pub">{html.escape(pub)}</span>'
+            f'<a class="post-pub" href="/publisher/{html.escape(pub)}/">{html.escape(pub)}</a>'
             for pub in pubs[:5]
         )
-        pub_html = f'<div class="blog-pubs">{pub_pills}</div>' if pub_pills else ""
+        pub_html = f'<div class="post-pubs">{pub_pills}</div>' if pub_pills else ""
 
         cards.append(
-            f'<a class="blog-card" href="/blog/{slug}/">'
-            f'<div class="blog-card-top">'
-            f'{tag_html}'
-            f'<span class="blog-card-date">{date}</span>'
-            f'</div>'
-            f'<div class="blog-card-title">{title}</div>'
-            f'<div class="blog-card-summary">{summary}</div>'
+            f'<div class="post-card">'
+            f'<div class="post-date">{tag_html}{date}</div>'
+            f'<div class="post-title"><a href="/blog/{slug}/">{title}</a></div>'
+            f'<div class="post-summary">{summary}</div>'
             f'{pub_html}'
-            f'</a>'
+            f'</div>'
         )
 
-    list_html = f'<div class="blog-list">{"".join(cards)}</div>'
+    sidebar_html = _build_blog_sidebar(posts)
+
+    body_html = (
+        '<div class="layout">'
+        f'<div class="main"><h2>Blog</h2>{"".join(cards)}</div>'
+        f'{sidebar_html}'
+        '</div>'
+    )
 
     json_ld = [organization_jsonld()]
 
@@ -682,7 +761,7 @@ def generate_blog_index(
         title="MCP Scorecard Blog — Analysis & Ecosystem Reports",
         description=f"{len(posts)} articles covering the MCP server ecosystem. Trust analysis, publisher spotlights, and weekly registry pulse reports.",
         canonical_path="/blog/",
-        body_html=hero_html + list_html,
+        body_html=body_html,
         json_ld=json_ld,
         page_css=BLOG_INDEX_CSS,
         active_nav="blog",

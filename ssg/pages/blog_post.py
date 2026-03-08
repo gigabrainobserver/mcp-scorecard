@@ -10,6 +10,15 @@ from ssg.seo import blog_posting_jsonld, breadcrumb_jsonld, organization_jsonld
 BLOG_PAGE_CSS = """
   .layout { display: flex; max-width: 1000px; margin: 0 auto; padding: 0 24px; gap: 48px; }
   .main { flex: 1; min-width: 0; padding: 48px 0; }
+  .sidebar { width: 220px; flex-shrink: 0; padding: 48px 0; border-left: 1px solid #21262d; padding-left: 24px; }
+  .sb-section { margin-bottom: 28px; }
+  .sb-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #484f58; margin-bottom: 10px; }
+  .sb-item { display: block; font-size: 13px; color: #7d8590; padding: 3px 0; text-decoration: none; }
+  .sb-item:hover { color: #58a6ff; text-decoration: none; }
+  .sb-count { float: right; color: #484f58; font-size: 12px; }
+  .sb-tag { display: inline-flex; align-items: center; gap: 6px; }
+  .sb-tag .tag { font-size: 10px; padding: 1px 6px; }
+  .sb-pub { font-family: monospace; font-size: 12px; }
   .post-view .back { font-size: 13px; color: #7d8590; margin-bottom: 24px; display: inline-block; text-decoration: none; }
   .post-view .back:hover { color: #58a6ff; }
   .post-header { margin-bottom: 32px; }
@@ -50,6 +59,10 @@ BLOG_PAGE_CSS = """
   .post-nav { display: flex; justify-content: space-between; margin-top: 48px; padding-top: 24px; border-top: 1px solid #21262d; font-size: 13px; }
   .post-nav a { color: #58a6ff; text-decoration: none; }
   .post-nav a:hover { text-decoration: underline; }
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; gap: 0; }
+    .sidebar { width: 100%; border-left: none; border-top: 1px solid #21262d; padding-left: 0; padding-top: 24px; }
+  }
 """
 
 
@@ -62,18 +75,83 @@ def _fmt_date(date_str: str) -> str:
         return date_str
 
 
+def _build_blog_sidebar(posts: list[dict]) -> str:
+    """Build blog sidebar HTML with tag counts, archive, and publisher mentions."""
+    # Tag counts
+    tag_counts: dict[str, int] = {}
+    pub_counts: dict[str, int] = {}
+    months: dict[str, int] = {}
+    for p in posts:
+        tag = p.get("tag", "")
+        if tag:
+            tag_counts[tag] = tag_counts.get(tag, 0) + 1
+        date = p.get("date", "")
+        if date:
+            m = date[:7]
+            months[m] = months.get(m, 0) + 1
+        for pub in p.get("publishers", []):
+            pub_counts[pub] = pub_counts.get(pub, 0) + 1
+
+    # Tags section
+    tag_order = ["Pulse", "Spotlight", "Trend", "Investigation", "Interview", "Comparison", "Incident"]
+    tags_html = ""
+    for t in tag_order:
+        if t in tag_counts:
+            t_lower = t.lower()
+            tags_html += (
+                f'<span class="sb-item"><span class="sb-tag">'
+                f'<span class="tag tag-{t_lower}">{html.escape(t)}</span></span>'
+                f'<span class="sb-count">{tag_counts[t]}</span></span>'
+            )
+
+    # Archive section
+    archive_html = ""
+    for m in sorted(months.keys(), reverse=True):
+        try:
+            dt = datetime.strptime(m + "-01", "%Y-%m-%d")
+            label = dt.strftime("%B %Y")
+        except ValueError:
+            label = m
+        archive_html += f'<span class="sb-item">{label}<span class="sb-count">{months[m]}</span></span>'
+
+    # Publishers mentioned
+    sorted_pubs = sorted(pub_counts.items(), key=lambda x: x[1], reverse=True)[:12]
+    pub_html = ""
+    for pub, count in sorted_pubs:
+        pub_html += (
+            f'<a class="sb-item sb-pub" href="/publisher/{html.escape(pub)}/">'
+            f'{html.escape(pub)}<span class="sb-count">{count}</span></a>'
+        )
+
+    return (
+        '<div class="sidebar">'
+        '<div class="sb-section">'
+        '<div class="sb-label">Article Type</div>'
+        f'{tags_html}'
+        '</div>'
+        '<div class="sb-section">'
+        '<div class="sb-label">Archive</div>'
+        f'{archive_html}'
+        '</div>'
+        '<div class="sb-section">'
+        '<div class="sb-label">Publishers Mentioned</div>'
+        f'{pub_html}'
+        '</div>'
+        '</div>'
+    )
+
+
 def generate_blog_posts(site_dir: Path, posts: list[dict], sitemap_urls: list[dict], lastmod: str) -> int:
     """Generate individual blog post pages. Returns count."""
     count = 0
+
+    # Build sidebar once (same on every post page)
+    sidebar_html = _build_blog_sidebar(posts)
 
     # Rewrite internal links in post body: blog.html#slug → /blog/slug/, publisher.html#ns → /publisher/ns/
     def rewrite_links(body: str) -> str:
         body = body.replace('href="blog.html#', 'href="/blog/')
         body = body.replace('href="publisher.html#', 'href="/publisher/')
-        # Close the links properly — the hash links become /path/ links
-        # Pattern: /blog/slug" → /blog/slug/"
-        # This is tricky since the original has blog.html#slug" which becomes /blog/slug"
-        # We need to add trailing slash before the closing quote
         import re
         body = re.sub(r'href="/blog/([^"]+)"', lambda m: f'href="/blog/{m.group(1)}/"', body)
         body = re.sub(r'href="/publisher/([^"]+)"', lambda m: f'href="/publisher/{m.group(1)}/"', body)
@@ -141,7 +219,9 @@ def generate_blog_posts(site_dir: Path, posts: list[dict], sitemap_urls: list[di
             + f'<div class="post-body">{body}</div>'
             + post_nav
             + '</div>'
-            + '</div></div>'
+            + '</div>'
+            + sidebar_html
+            + '</div>'
         )
 
         page_html = base_page(
