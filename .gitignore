@@ -17,6 +17,9 @@ docs/
 CLAUDE.md
 vaults/
 
+# SSG build output
+site/
+
 # Infrastructure — never publish
 api-worker/
 db/api_keys.sql
