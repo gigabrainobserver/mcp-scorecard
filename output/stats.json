@@ -1,50 +1,50 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-03-06T08:25:25.135075Z",
-  "server_count": 3121,
-  "servers_with_repo": 2647,
-  "servers_with_packages": 2121,
+  "generated_at": "2026-03-14T08:13:32.025427Z",
+  "server_count": 3670,
+  "servers_with_repo": 3072,
+  "servers_with_packages": 2455,
   "score_distribution": [
     {
       "label": "High Trust",
       "min_score": 80,
       "max_score": 100,
-      "count": 34
+      "count": 35
     },
     {
       "label": "Moderate Trust",
       "min_score": 60,
       "max_score": 79,
-      "count": 527
+      "count": 568
     },
     {
       "label": "Low Trust",
       "min_score": 40,
       "max_score": 59,
-      "count": 1810
+      "count": 1975
     },
     {
       "label": "Very Low Trust",
       "min_score": 20,
       "max_score": 39,
-      "count": 746
+      "count": 1087
     },
     {
       "label": "Unknown/Suspicious",
       "min_score": 0,
       "max_score": 19,
-      "count": 4
+      "count": 5
     }
   ],
   "flag_summary": {
-    "TEMPLATE_DESCRIPTION": 585,
-    "NO_SOURCE": 336,
-    "SENSITIVE_CRED_REQUEST": 65,
-    "DESCRIPTION_DUPLICATE": 52,
-    "DEAD_ENTRY": 32,
+    "TEMPLATE_DESCRIPTION": 653,
+    "NO_SOURCE": 452,
+    "SENSITIVE_CRED_REQUEST": 82,
+    "DESCRIPTION_DUPLICATE": 53,
+    "DEAD_ENTRY": 37,
     "HIGH_SECRET_DEMAND": 30,
-    "REPO_ARCHIVED": 15,
-    "STAGING_ARTIFACT": 12
+    "STAGING_ARTIFACT": 14,
+    "REPO_ARCHIVED": 9
   },
   "top_servers": [
     {
@@ -108,12 +108,22 @@
       "trust_label": "High Trust"
     },
     {
+      "name": "io.github.ChromeDevTools/chrome-devtools-mcp",
+      "trust_score": 84,
+      "trust_label": "High Trust"
+    },
+    {
       "name": "io.github.apollographql/apollo-mcp-server",
       "trust_score": 84,
       "trust_label": "High Trust"
     },
     {
       "name": "io.github.basicmachines-co/basic-memory",
+      "trust_score": 84,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.dgunning/edgartools",
       "trust_score": 84,
       "trust_label": "High Trust"
     },
@@ -143,22 +153,17 @@
       "trust_label": "High Trust"
     },
     {
-      "name": "io.github.ChromeDevTools/chrome-devtools-mcp",
-      "trust_score": 83,
-      "trust_label": "High Trust"
-    },
-    {
-      "name": "io.github.IvanMurzak/Unity-MCP",
-      "trust_score": 83,
-      "trust_label": "High Trust"
-    },
-    {
       "name": "io.github.MervinPraison/praisonai",
       "trust_score": 83,
       "trust_label": "High Trust"
     },
     {
-      "name": "io.github.GLips/Figma-Context-MCP",
+      "name": "io.github.CursorTouch/Windows-MCP",
+      "trust_score": 82,
+      "trust_label": "High Trust"
+    },
+    {
+      "name": "io.github.IvanMurzak/Unity-MCP",
       "trust_score": 82,
       "trust_label": "High Trust"
     },
@@ -166,13 +171,8 @@
       "name": "io.github.robotmcp/ros-mcp-server",
       "trust_score": 82,
       "trust_label": "High Trust"
-    },
-    {
-      "name": "io.github.wonderwhy-er/desktop-commander",
-      "trust_score": 82,
-      "trust_label": "High Trust"
     }
   ],
-  "average_trust_score": 48.4,
-  "median_trust_score": 52
+  "average_trust_score": 46.9,
+  "median_trust_score": 50
 }
